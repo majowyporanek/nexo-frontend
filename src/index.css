@@ -1,3 +1,23 @@
 @import "tailwindcss";
 
 @plugin "daisyui";
+
+/* Custom Scrollbar for Kanban Board */
+.custom-scrollbar::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: var(--fallback-b2,oklch(var(--b2)/1)); 
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--fallback-bc,oklch(var(--bc)/0.2)); 
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--fallback-bc,oklch(var(--bc)/0.4)); 
+}
