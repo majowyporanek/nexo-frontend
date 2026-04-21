@@ -2,6 +2,14 @@
 
 @plugin "daisyui";
 
+@theme inline {
+  --color-brand: #891d42;
+  --color-sidebar-bg: #3d1525;
+  --color-sidebar-hover: #5d2338;
+  --color-sidebar-text: #e2d5da;
+  --color-board-bg: #f4f5f7;
+}
+
 /* Custom Scrollbar for Kanban Board */
 .custom-scrollbar::-webkit-scrollbar {
   height: 8px;

@@ -9,28 +9,26 @@ interface KanbanColumnProps {
 
 export function KanbanColumn({ title, issues, accentColor }: KanbanColumnProps) {
   return (
-    <div className="flex h-[calc(100vh-14rem)] w-[19rem] flex-shrink-0 flex-col rounded-xl bg-base-200/50 border border-base-300">
+    <div className="flex h-full w-[280px] flex-shrink-0 flex-col rounded-md bg-[#f4f5f7] border-none shadow-sm">
       {/* Column Header */}
-      <div className="flex items-center justify-between p-3">
+      <div className="flex items-center justify-between px-3 py-3 sticky top-0 z-10 rounded-t-md">
         <div className="flex items-center gap-2">
           {accentColor && (
             <div
-              className="h-2 w-2 rounded-full"
+              className="h-2.5 w-2.5 rounded-sm"
               style={{ backgroundColor: accentColor }}
             />
           )}
-          <h3 className="text-xs font-bold uppercase tracking-wider text-base-content/70">
+          <h3 className="text-xs font-semibold uppercase text-gray-500 tracking-wide">
             {title}
+            <span className="ml-2 font-normal text-gray-400">{issues.length}</span>
           </h3>
-          <span className="badge badge-sm badge-neutral font-semibold">
-            {issues.length}
-          </span>
         </div>
-        <div className="flex items-center">
-          <button className="btn btn-square btn-xs btn-ghost text-base-content/60 hover:text-base-content">
+        <div className="flex gap-1 opacity-0 hover:opacity-100 transition-opacity">
+          <button className="btn btn-square btn-ghost btn-xs text-gray-500 rounded hover:bg-gray-200">
             <Plus className="h-4 w-4" />
           </button>
-          <button className="btn btn-square btn-xs btn-ghost text-base-content/60 hover:text-base-content">
+          <button className="btn btn-square btn-ghost btn-xs text-gray-500 rounded hover:bg-gray-200">
             <MoreHorizontal className="h-4 w-4" />
           </button>
         </div>
@@ -38,13 +36,13 @@ export function KanbanColumn({ title, issues, accentColor }: KanbanColumnProps) 
 
       {/* Cards Container */}
       <div
-        className={`flex flex-1 flex-col gap-3 overflow-y-auto px-3 pb-3 pt-1 ${
-          issues.length === 0 ? "items-center justify-center" : ""
+        className={`flex flex-1 flex-col gap-2 overflow-y-auto px-1.5 pb-2 custom-scrollbar ${
+          issues.length === 0 ? "items-center justify-start p-2" : ""
         }`}
       >
         {issues.length === 0 ? (
-          <div className="flex flex-col items-center justify-center text-base-content/40 p-4 border-2 border-dashed border-base-300 rounded-lg h-full w-full">
-              <span className="text-xs font-semibold">Drop issues here</span>
+          <div className="flex flex-col items-center justify-center text-gray-400 p-4 border-2 border-dashed border-gray-200 rounded bg-white w-full">
+              <span className="text-xs font-medium">Drop issues</span>
           </div>
         ) : (
           issues.map((issue) => <IssueCard key={issue.id} issue={issue} />)

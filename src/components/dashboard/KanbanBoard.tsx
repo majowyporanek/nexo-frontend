@@ -136,39 +136,61 @@ const issuesByStatus: Record<string, Issue[]> = {
 
 export function KanbanBoard() {
   return (
-    <div className="flex flex-1 flex-col h-[calc(100vh-theme(spacing.14)-theme(spacing.6)*2)]">
+    <div className="flex flex-1 flex-col h-[calc(100vh-72px)] bg-board-bg pt-2 pb-6">
+      {/* Breadcrumbs */}
+      <div className="mb-4 text-sm font-medium text-gray-500">
+        Projects / Frontend Evolution / Kanban board
+      </div>
+
       {/* Board Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-bold text-base-content">Sprint 1</h1>
-          <p className="text-sm font-semibold text-base-content/60">
-            April 1 - April 14, 2026 
-          </p>
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-4">
+            <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Sprint 1</h1>
         </div>
 
-        {/* Team Avatars */}
-        <div className="flex items-center gap-3">
-          <span className="text-sm font-bold text-base-content/60 hidden sm:inline">Filter:</span>
-          <div className="avatar-group -space-x-3 rtl:space-x-reverse">
+        {/* Team Avatars & Actions */}
+        <div className="flex items-center gap-4">
+          <div className="flex -space-x-2 mr-2">
             {teamMembers.map((member) => (
               <div 
                 key={member.name}
-                className="avatar border-base-100 transition-transform hover:z-10 hover:-translate-y-1 cursor-pointer"
+                className="w-8 h-8 rounded-full border-2 border-board-bg flex items-center justify-center text-xs font-semibold text-white cursor-pointer hover:z-10"
+                style={{ backgroundColor: member.color }}
                 title={member.name}
               >
-                  <div className="w-10 rounded-full" style={{ backgroundColor: member.color }}>
-                    <span className="text-white text-xs font-bold w-full h-full flex items-center justify-center">
-                        {member.name.split(" ").map((n) => n[0]).join("")}
-                    </span>
-                  </div>
+                  {member.name.split(" ").map((n) => n[0]).join("")}
               </div>
             ))}
           </div>
+          
+          <button className="btn h-9 min-h-0 bg-gray-100 hover:bg-gray-200 text-gray-700 border-none shadow-sm font-medium">
+            Complete sprint
+          </button>
         </div>
       </div>
 
+      {/* Board Filters */}
+      <div className="flex items-center gap-3 mb-6">
+        <div className="relative">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input
+            type="text"
+            placeholder="Search"
+            className="h-9 w-64 rounded-md border border-gray-300 pl-9 text-sm focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand bg-white"
+          />
+        </div>
+        <select className="select select-sm h-9 bg-white border-gray-300 text-gray-700 rounded-md font-normal">
+          <option>Epic</option>
+        </select>
+        <select className="select select-sm h-9 bg-white border-gray-300 text-gray-700 rounded-md font-normal">
+          <option>Type</option>
+        </select>
+        <div className="h-6 w-[1px] bg-gray-300 mx-2"></div>
+        <button className="text-sm font-medium text-gray-600 hover:text-gray-900">Clear all</button>
+      </div>
+
       {/* Kanban Columns */}
-      <div className="flex flex-1 gap-6 overflow-x-auto pb-4 custom-scrollbar">
+      <div className="flex flex-1 gap-4 overflow-x-auto pb-4 custom-scrollbar">
         {columns.map((column) => (
           <KanbanColumn
             key={column.status}

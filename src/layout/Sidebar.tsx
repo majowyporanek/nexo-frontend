@@ -32,23 +32,29 @@ export function Sidebar() {
   const [yourWorkOpen, setYourWorkOpen] = useState(true)
 
   return (
-    <aside className="flex h-screen w-64 flex-col border-r border-base-300 bg-base-100 hidden md:flex">
+    <aside className="flex h-screen w-[260px] flex-col bg-sidebar-bg text-sidebar-text hidden md:flex border-r border-[#4e2233]">
       {/* Logo */}
-      <div className="flex items-center gap-2.5 px-4 py-4 border-b border-base-300">
-        <div className="flex h-8 w-8 items-center justify-center rounded bg-primary text-primary-content">
-          <Hexagon className="h-4 w-4" />
+      <div className="flex items-center gap-3 px-5 py-[18px] border-b border-[#4e2233]">
+        <div className="flex h-8 w-8 items-center justify-center rounded-sm border border-[#6b2c44]">
+          <Hexagon className="h-5 w-5 text-white" />
         </div>
-        <span className="text-xl font-bold text-base-content">Nexo</span>
+        <div className="bg-[#004fcf] text-white px-2 py-0.5 rounded shadow-sm">
+          <span className="text-xl font-bold tracking-tight leading-none">Nexo</span>
+        </div>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-4 py-4 overflow-y-auto">
-        <ul className="menu menu-md w-full p-0">
+      <nav className="flex-1 px-3 py-6 overflow-y-auto">
+        <ul className="space-y-1">
           {navItems.map((item) => (
-            <li key={item.label} className="my-0.5">
-              <a className={`flex gap-3 px-3 py-2 ${item.active ? 'active bg-primary text-primary-content' : 'hover:bg-base-200'}`}>
+            <li key={item.label}>
+              <a 
+                className={`flex gap-3 px-3 py-2 rounded-md font-medium cursor-pointer transition-colors ${
+                  item.active ? 'bg-sidebar-hover text-white flex-row' : 'hover:bg-sidebar-hover/60 hover:text-white text-sidebar-text'
+                }`}
+              >
                 <item.icon className="h-5 w-5" />
-                <span className="font-medium">{item.label}</span>
+                <span>{item.label}</span>
               </a>
             </li>
           ))}
@@ -58,7 +64,7 @@ export function Sidebar() {
         <div className="mt-8">
           <button
             onClick={() => setYourWorkOpen(!yourWorkOpen)}
-            className="flex w-full items-center gap-2 px-3 py-2 text-xs font-bold uppercase tracking-wider text-base-content/60 hover:text-base-content"
+            className="flex w-full items-center gap-2 px-3 py-2 text-xs font-bold uppercase tracking-wider text-sidebar-text/70 hover:text-white"
           >
             {yourWorkOpen ? (
               <ChevronDown className="h-4 w-4" />
@@ -69,15 +75,15 @@ export function Sidebar() {
           </button>
           
           {yourWorkOpen && (
-            <ul className="menu menu-sm w-full p-0 mt-2">
+            <ul className="mt-2 space-y-1">
               {yourWorkItems.map((item) => (
-                <li key={item.label} className="my-0.5">
-                   <a className="flex justify-between px-3 py-2 hover:bg-base-200">
-                    <span className="flex items-center gap-3 text-base-content/80">
-                      <item.icon className="h-4 w-4" />
+                <li key={item.label}>
+                   <a className="flex justify-between px-3 py-2 rounded-md hover:bg-sidebar-hover/60 cursor-pointer text-sidebar-text hover:text-white text-sm">
+                    <span className="flex items-center gap-3">
+                      <item.icon className="h-4 w-4 text-sidebar-text/70" />
                       {item.label}
                     </span>
-                    <span className="badge badge-neutral badge-sm font-semibold">
+                    <span className="bg-white/10 text-white rounded-sm px-1.5 py-0.5 text-xs font-semibold">
                       {item.count}
                     </span>
                   </a>
@@ -88,17 +94,17 @@ export function Sidebar() {
         </div>
       </nav>
 
-      {/* User Section (Optional in sidebar, but kept from original design) */}
-      <div className="border-t border-base-300 p-4 mt-auto">
-        <div className="flex items-center gap-3 rounded-lg px-2 py-2 transition-colors hover:bg-base-200 cursor-pointer">
+      {/* User Section */}
+      <div className="border-t border-[#4e2233] p-4 mt-auto">
+        <div className="flex items-center gap-3 rounded-lg px-2 py-2 transition-colors hover:bg-sidebar-hover cursor-pointer">
           <div className="avatar placeholder">
-              <div className="bg-primary text-primary-content rounded-full w-8">
-                  <span className="text-xs">JD</span>
+              <div className="bg-brand text-white rounded-full w-8">
+                  <span className="text-xs font-semibold">JD</span>
               </div>
           </div>
           <div className="flex-1 min-w-0">
-            <p className="truncate text-sm font-semibold text-base-content">John Doe</p>
-            <p className="truncate text-xs text-base-content/60">Developer</p>
+            <p className="truncate text-sm font-semibold text-white">John Doe</p>
+            <p className="truncate text-xs text-sidebar-text/70">Developer</p>
           </div>
         </div>
       </div>
