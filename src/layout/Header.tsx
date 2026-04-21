@@ -1,11 +1,18 @@
 import { Search, Plus, Bell, Settings, HelpCircle, Menu } from "lucide-react"
 
-export function Header() {
+interface HeaderProps {
+  onMenuClick?: () => void
+}
+
+export function Header({ onMenuClick }: HeaderProps) {
   return (
     <header className="flex h-[72px] items-center justify-between border-b border-base-300 bg-white px-6">
       {/* Mobile Menu & Search */}
       <div className="flex items-center gap-4 w-full max-w-md">
-        <button className="btn btn-square btn-sm btn-ghost md:hidden">
+        <button 
+          className="btn btn-square btn-sm btn-ghost md:hidden"
+          onClick={onMenuClick}
+        >
             <Menu className="h-5 w-5" />
         </button>
         

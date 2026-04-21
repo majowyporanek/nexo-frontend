@@ -11,8 +11,13 @@ import {
   CheckCircle2,
   Clock,
   Hexagon,
+  X
 } from "lucide-react"
-import { cn } from "../lib/utils"
+
+interface SidebarProps {
+  isOpen?: boolean
+  onClose?: () => void
+}
 
 const navItems = [
   { icon: LayoutDashboard, label: "Dashboard", active: false },
@@ -28,20 +33,43 @@ const yourWorkItems = [
   { icon: CheckCircle2, label: "Done", count: 24 },
 ]
 
-export function Sidebar() {
+export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
   const [yourWorkOpen, setYourWorkOpen] = useState(true)
 
   return (
-    <aside className="flex h-screen w-[260px] flex-col bg-sidebar-bg text-sidebar-text hidden md:flex border-r border-[#4e2233]">
-      {/* Logo */}
-      <div className="flex items-center gap-3 px-5 py-[18px] border-b border-[#4e2233]">
-        <div className="flex h-8 w-8 items-center justify-center rounded-sm border border-[#6b2c44]">
-          <Hexagon className="h-5 w-5 text-white" />
+    <>
+      {/* Mobile Overlay */}
+      {isOpen && (
+        <div 
+          className="fixed inset-0 z-40 bg-black/50 md:hidden"
+          onClick={onClose}
+        />
+      )}
+
+      {/* Sidebar */}
+      <aside 
+        className={`fixed inset-y-0 left-0 z-50 flex h-screen w-[260px] flex-col bg-sidebar-bg text-sidebar-text border-r border-[#4e2233] transition-transform duration-300 md:static md:translate-x-0 ${
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        {/* Logo */}
+        <div className="flex items-center justify-between px-5 py-[18px] border-b border-[#4e2233]">
+          <div className="flex items-center gap-3">
+            <div className="flex h-8 w-8 items-center justify-center rounded-sm border border-[#6b2c44]">
+              <Hexagon className="h-5 w-5 text-white" />
+            </div>
+            <div className="bg-[#004fcf] text-white px-2 py-0.5 rounded shadow-sm">
+              <span className="text-xl font-bold tracking-tight leading-none">Nexo</span>
+            </div>
+          </div>
+          
+          <button 
+            className="md:hidden p-1 text-sidebar-text hover:text-white"
+            onClick={onClose}
+          >
+            <X className="h-5 w-5" />
+          </button>
         </div>
-        <div className="bg-[#004fcf] text-white px-2 py-0.5 rounded shadow-sm">
-          <span className="text-xl font-bold tracking-tight leading-none">Nexo</span>
-        </div>
-      </div>
 
       {/* Navigation */}
       <nav className="flex-1 px-3 py-6 overflow-y-auto">
@@ -108,6 +136,7 @@ export function Sidebar() {
           </div>
         </div>
       </div>
-    </aside>
+      </aside>
+    </>
   )
 }
