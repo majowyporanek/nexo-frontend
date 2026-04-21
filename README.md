@@ -1,50 +1,57 @@
-# React + TypeScript + Vite
+# Nexo Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Nexo is a Jira-clone application. This repository contains the frontend, which features a fully responsive Kanban board and a sidebar navigation layout styled with a custom burgundy theme. 
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+* **Framework:** React 18, Vite 5
+* **Language:** TypeScript
+* **Styling:** Tailwind CSS v4, daisyUI
+* **Routing:** React Router v6
+* **State Management / API:** TanStack React Query v5
+* **Icons:** lucide-react
 
-## Expanding the ESLint configuration
+## Features
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+* **Kanban Board:** A Jira-like board with responsive, fluid columns and styled issue cards.
+* **Side Navigation:** A sleek, fully featured sidebar navigation with a custom dark burgundy theme.
+* **Responsive Styling:** A synergistic layout handling both standard laptops and ultra-wide monitor views cleanly.
+* **Issue Cards:** UI implemented for tracking tickets with priority, assignee avatars, issue types, and story points.
 
-- Configure the top-level `parserOptions` property like this:
+## Getting Started
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+### Prerequisites
+
+* Node.js (v18 or higher recommended)
+* npm
+
+### Installation
+
+1. Navigate into the frontend directory:
+   ```bash
+   cd nexo-frontend
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+### Running the Development Server
+
+To start the Vite development server with Hot Module Replacement (HMR):
+
+```bash
+npm run dev
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+The application will be available at [http://localhost:5173](http://localhost:5173).
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+### Building for Production
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+To build the application for production:
+
+```bash
+npm run build
 ```
+The output will be generated in the `dist` directory.
