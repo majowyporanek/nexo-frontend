@@ -136,7 +136,7 @@ const issuesByStatus: Record<string, Issue[]> = {
 
 export function KanbanBoard() {
   return (
-    <div className="flex flex-1 flex-col h-[calc(100vh-72px)] bg-board-bg pt-2 pb-6">
+    <div className="flex flex-1 flex-col h-full bg-board-bg pb-2">
       {/* Breadcrumbs */}
       <div className="mb-4 text-sm font-medium text-gray-500">
         Projects / Frontend Evolution / Kanban board

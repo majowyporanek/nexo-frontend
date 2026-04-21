@@ -9,7 +9,7 @@ interface KanbanColumnProps {
 
 export function KanbanColumn({ title, issues, accentColor }: KanbanColumnProps) {
   return (
-    <div className="flex h-full w-[280px] flex-shrink-0 flex-col rounded-md bg-[#f4f5f7] border-none shadow-sm">
+    <div className="flex h-full w-[280px] md:min-w-[280px] md:max-w-[400px] flex-1 flex-shrink-0 flex-col rounded-md bg-[#f4f5f7] border-none shadow-sm">
       {/* Column Header */}
       <div className="flex items-center justify-between px-3 py-3 sticky top-0 z-10 rounded-t-md">
         <div className="flex items-center gap-2">
