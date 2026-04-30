@@ -2,6 +2,11 @@ import { createBrowserRouter } from "react-router-dom"
 import App from "../App"
 import { MainLayout } from "../layout/MainLayout"
 
+import { AuthLayout } from "../pages/auth/AuthLayout";
+import { RegisterAdmin } from "../pages/auth/RegisterAdmin";
+import { RegisterInvited } from "../pages/auth/RegisterInvited";
+import { LoginPage } from "../pages/auth/LoginPage";
+
 export const router = createBrowserRouter([
     {
         path: "/",
@@ -19,6 +24,24 @@ export const router = createBrowserRouter([
     },
     {
         path: "/auth",
-        element: <div>Auth Module Placeholder</div>
+        element: <AuthLayout />,
+        children: [
+            {
+                index: true,
+                element: <LoginPage />
+            },
+            {
+                path: "login",
+                element: <LoginPage />
+            },
+            {
+                path: "register-admin",
+                element: <RegisterAdmin />
+            },
+            {
+                path: "register-invited",
+                element: <RegisterInvited />
+            }
+        ]
     }
 ])
