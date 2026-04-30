@@ -20,7 +20,7 @@ export function RegisterAdmin() {
 
     const registerMutation = useMutation({
         mutationFn: authApi.registerAdmin,
-        onSuccess: (data) => {
+        onSuccess: () => {
             // Po pomyślnej rejestracji admina, przenosimy do logowania
             navigate("/auth/login");
         },

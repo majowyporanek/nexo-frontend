@@ -3,10 +3,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useMutation } from "@tanstack/react-query";
 import { authApi } from "../../api/auth.api";
+import { useAuthStore } from "../../store/useAuthStore";
 
 export function LoginPage() {
     const { t } = useTranslation('auth');
     const navigate = useNavigate();
+    const login = useAuthStore(state => state.login);
     
     const [formData, setFormData] = useState({
         email: "",
@@ -18,8 +20,8 @@ export function LoginPage() {
     const loginMutation = useMutation({
         mutationFn: authApi.login,
         onSuccess: (data) => {
-            // Zapisujemy token do localStorage
-            localStorage.setItem("nexo_token", data.token);
+            // Używamy globalnego stanu do zapisu logowania
+            login(data.token);
             // Przekierowanie do głównej aplikacji
             navigate("/");
         },

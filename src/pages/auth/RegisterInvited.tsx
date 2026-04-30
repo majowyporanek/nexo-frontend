@@ -24,7 +24,7 @@ export function RegisterInvited() {
 
     const registerMutation = useMutation({
         mutationFn: authApi.registerInvited,
-        onSuccess: (data) => {
+        onSuccess: () => {
             // Po pomyślnej rejestracji zaproszonego, przenosimy do logowania
             navigate("/auth/login");
         },

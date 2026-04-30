@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useAuthStore } from "../store/useAuthStore"
 import {
   LayoutDashboard,
   Zap,
@@ -35,6 +36,17 @@ const yourWorkItems = [
 
 export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
   const [yourWorkOpen, setYourWorkOpen] = useState(true)
+  const { user } = useAuthStore()
+
+  // Inicjały
+  const getInitials = (email: string) => {
+    if (!email) return "?"
+    const parts = email.split('@')[0].split('.')
+    if (parts.length > 1) {
+      return (parts[0][0] + parts[1][0]).toUpperCase()
+    }
+    return email.substring(0, 2).toUpperCase()
+  }
 
   return (
     <>
@@ -126,13 +138,13 @@ export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
       <div className="border-t border-[#4e2233] p-4 mt-auto">
         <div className="flex items-center gap-3 rounded-lg px-2 py-2 transition-colors hover:bg-sidebar-hover cursor-pointer">
           <div className="avatar placeholder">
-              <div className="bg-brand text-white rounded-full w-8">
-                  <span className="text-xs font-semibold">JD</span>
+              <div className="bg-[#0052CC] text-white rounded-full w-8 h-8 flex items-center justify-center shadow-sm">
+                  <span className="text-xs font-semibold">{getInitials(user?.email || "")}</span>
               </div>
           </div>
           <div className="flex-1 min-w-0">
-            <p className="truncate text-sm font-semibold text-white">John Doe</p>
-            <p className="truncate text-xs text-sidebar-text/70">Developer</p>
+            <p className="truncate text-sm font-semibold text-white">{user?.email || "Użytkownik"}</p>
+            <p className="truncate text-xs text-sidebar-text/70">{user?.role || "Brak Roli"}</p>
           </div>
         </div>
       </div>

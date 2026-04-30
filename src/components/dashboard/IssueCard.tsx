@@ -92,7 +92,6 @@ export function IssueCard({ issue }: IssueCardProps) {
             {/* Priority */}
             <PriorityIcon
               className={`h-4 w-4 ${priorityConfig[issue.priority].color}`}
-              title={`Priority: ${priorityConfig[issue.priority].label}`}
             />
 
             {/* Story Points */}
