@@ -1,23 +1,41 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useMutation } from "@tanstack/react-query";
+import { authApi } from "../../api/auth.api";
 
 export function LoginPage() {
     const { t } = useTranslation('auth');
+    const navigate = useNavigate();
     
     const [formData, setFormData] = useState({
         email: "",
         password: ""
     });
 
+    const [errorMsg, setErrorMsg] = useState("");
+
+    const loginMutation = useMutation({
+        mutationFn: authApi.login,
+        onSuccess: (data) => {
+            // Zapisujemy token do localStorage
+            localStorage.setItem("nexo_token", data.token);
+            // Przekierowanie do głównej aplikacji
+            navigate("/");
+        },
+        onError: (error: any) => {
+            setErrorMsg(error.response?.data?.message || "Wystąpił błąd podczas logowania");
+        }
+    });
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
+        setErrorMsg(""); // Wyczyść błąd podczas wpisywania
     };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        console.log("Login payload:", formData);
-        // Tutaj w przyszłości podepniemy zapytanie do /auth/login
+        loginMutation.mutate(formData);
     };
 
     return (
@@ -69,11 +87,18 @@ export function LoginPage() {
                     </a>
                 </div>
 
+                {errorMsg && (
+                    <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-100 rounded-md">
+                        {errorMsg}
+                    </div>
+                )}
+
                 <button 
                     type="submit"
-                    className="w-full h-10 mt-2 bg-[#0052CC] hover:bg-[#0047b3] text-white font-medium rounded-md text-sm transition-colors"
+                    disabled={loginMutation.isPending}
+                    className="w-full h-10 mt-2 bg-[#0052CC] hover:bg-[#0047b3] disabled:bg-[#0052cc]/70 text-white font-medium rounded-md text-sm transition-colors flex items-center justify-center"
                 >
-                    {t("login.submitButton")}
+                    {loginMutation.isPending ? "Zapisywanie..." : t("login.submitButton")}
                 </button>
             </form>
 

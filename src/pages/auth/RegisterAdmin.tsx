@@ -1,9 +1,12 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useMutation } from "@tanstack/react-query";
+import { authApi } from "../../api/auth.api";
 
 export function RegisterAdmin() {
     const { t } = useTranslation('auth');
+    const navigate = useNavigate();
     
     const [formData, setFormData] = useState({
         organizationName: "",
@@ -13,14 +16,27 @@ export function RegisterAdmin() {
         password: ""
     });
 
+    const [errorMsg, setErrorMsg] = useState("");
+
+    const registerMutation = useMutation({
+        mutationFn: authApi.registerAdmin,
+        onSuccess: (data) => {
+            // Po pomyślnej rejestracji admina, przenosimy do logowania
+            navigate("/auth/login");
+        },
+        onError: (error: any) => {
+            setErrorMsg(error.response?.data?.message || "Wystąpił błąd podczas rejestracji");
+        }
+    });
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
+        setErrorMsg("");
     };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        console.log("Register Admin payload:", formData);
-        // Tutaj w przyszłości podepniemy zapytanie do /auth/register-admin
+        registerMutation.mutate(formData);
     };
 
     return (
@@ -109,11 +125,18 @@ export function RegisterAdmin() {
                     />
                 </div>
 
+                {errorMsg && (
+                    <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-100 rounded-md">
+                        {errorMsg}
+                    </div>
+                )}
+
                 <button 
                     type="submit"
-                    className="w-full h-10 mt-2 bg-[#0052CC] hover:bg-[#0047b3] text-white font-medium rounded-md text-sm transition-colors"
+                    disabled={registerMutation.isPending}
+                    className="w-full h-10 mt-2 bg-[#0052CC] hover:bg-[#0047b3] disabled:bg-[#0052cc]/70 text-white font-medium rounded-md text-sm transition-colors flex items-center justify-center"
                 >
-                    {t("registerAdmin.submitButton")}
+                    {registerMutation.isPending ? "Zapisywanie..." : t("registerAdmin.submitButton")}
                 </button>
             </form>
 
