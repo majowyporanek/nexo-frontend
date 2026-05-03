@@ -1,4 +1,6 @@
 import { useState } from "react"
+import { useAuthStore } from "../store/useAuthStore"
+import { useTranslation } from 'react-i18next'
 import {
   LayoutDashboard,
   Zap,
@@ -20,21 +22,33 @@ interface SidebarProps {
 }
 
 const navItems = [
-  { icon: LayoutDashboard, label: "Dashboard", active: false },
-  { icon: Zap, label: "Active Sprints", active: true },
-  { icon: Layers, label: "Backlog", active: false },
-  { icon: BarChart3, label: "Reports", active: false },
-  { icon: Settings, label: "Settings", active: false },
+  { icon: LayoutDashboard, key: "nav.dashboard", active: false },
+  { icon: Zap, key: "nav.activeSprints", active: true },
+  { icon: Layers, key: "nav.backlog", active: false },
+  { icon: BarChart3, key: "nav.reports", active: false },
+  { icon: Settings, key: "nav.settings", active: false },
 ]
 
 const yourWorkItems = [
-  { icon: ClipboardList, label: "Assigned to me", count: 5 },
-  { icon: Clock, label: "Recent", count: 12 },
-  { icon: CheckCircle2, label: "Done", count: 24 },
+  { icon: ClipboardList, key: "yourWork.assigned", count: 5 },
+  { icon: Clock, key: "yourWork.recent", count: 12 },
+  { icon: CheckCircle2, key: "yourWork.done", count: 24 },
 ]
 
 export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
   const [yourWorkOpen, setYourWorkOpen] = useState(true)
+  const { user } = useAuthStore()
+  const { t } = useTranslation('common')
+
+  // Inicjały
+  const getInitials = (email: string) => {
+    if (!email) return "?"
+    const parts = email.split('@')[0].split('.')
+    if (parts.length > 1) {
+      return (parts[0][0] + parts[1][0]).toUpperCase()
+    }
+    return email.substring(0, 2).toUpperCase()
+  }
 
   return (
     <>
@@ -75,14 +89,14 @@ export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
       <nav className="flex-1 px-3 py-6 overflow-y-auto">
         <ul className="space-y-1">
           {navItems.map((item) => (
-            <li key={item.label}>
-              <a 
+            <li key={item.key}>
+              <a
                 className={`flex gap-3 px-3 py-2 rounded-md font-medium cursor-pointer transition-colors ${
                   item.active ? 'bg-sidebar-hover text-white flex-row' : 'hover:bg-sidebar-hover/60 hover:text-white text-sidebar-text'
                 }`}
               >
                 <item.icon className="h-5 w-5" />
-                <span>{item.label}</span>
+                <span className="text-sm">{t(item.key)}</span>
               </a>
             </li>
           ))}
@@ -99,17 +113,17 @@ export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
             ) : (
               <ChevronRight className="h-4 w-4" />
             )}
-            Your Work
+            {t('sidebar.yourWorkTitle', 'Your Work')}
           </button>
           
           {yourWorkOpen && (
             <ul className="mt-2 space-y-1">
               {yourWorkItems.map((item) => (
-                <li key={item.label}>
+                <li key={item.key}>
                    <a className="flex justify-between px-3 py-2 rounded-md hover:bg-sidebar-hover/60 cursor-pointer text-sidebar-text hover:text-white text-sm">
                     <span className="flex items-center gap-3">
                       <item.icon className="h-4 w-4 text-sidebar-text/70" />
-                      {item.label}
+                      {t(item.key)}
                     </span>
                     <span className="bg-white/10 text-white rounded-sm px-1.5 py-0.5 text-xs font-semibold">
                       {item.count}
@@ -126,13 +140,13 @@ export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
       <div className="border-t border-[#4e2233] p-4 mt-auto">
         <div className="flex items-center gap-3 rounded-lg px-2 py-2 transition-colors hover:bg-sidebar-hover cursor-pointer">
           <div className="avatar placeholder">
-              <div className="bg-brand text-white rounded-full w-8">
-                  <span className="text-xs font-semibold">JD</span>
+              <div className="bg-[#0052CC] text-white rounded-full w-8 h-8 flex items-center justify-center shadow-sm">
+                  <span className="text-xs font-semibold">{getInitials(user?.email || "")}</span>
               </div>
           </div>
           <div className="flex-1 min-w-0">
-            <p className="truncate text-sm font-semibold text-white">John Doe</p>
-            <p className="truncate text-xs text-sidebar-text/70">Developer</p>
+            <p className="truncate text-sm font-semibold text-white">{user?.email || "Użytkownik"}</p>
+            <p className="truncate text-xs text-sidebar-text/70">{user?.role || "Brak Roli"}</p>
           </div>
         </div>
       </div>

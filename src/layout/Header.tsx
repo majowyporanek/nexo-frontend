@@ -1,10 +1,31 @@
-import { Search, Plus, Bell, Settings, HelpCircle, Menu } from "lucide-react"
+import { Search, Plus, Bell, Settings, HelpCircle, Menu, LogOut } from "lucide-react"
+import { useAuthStore } from "../store/useAuthStore"
+import { useTranslation } from "react-i18next"
 
 interface HeaderProps {
   onMenuClick?: () => void
 }
 
 export function Header({ onMenuClick }: HeaderProps) {
+  const { user, logout } = useAuthStore()
+  const { t, i18n } = useTranslation('common')
+
+  // Prosta funkcja do pobierania inicjałów z maila, np. "test.user@example.com" => "TU"
+  const getInitials = (email: string) => {
+    const parts = email.split('@')[0].split('.')
+    if (parts.length > 1) {
+      return (parts[0][0] + parts[1][0]).toUpperCase()
+    }
+    return email.substring(0, 2).toUpperCase()
+  }
+
+  const changeLang = (lng: string) => {
+    i18n.changeLanguage(lng)
+    localStorage.setItem('nexo_lang', lng)
+  }
+
+  const currentLang = i18n.language || 'pl'
+
   return (
     <header className="flex h-[72px] items-center justify-between border-b border-base-300 bg-white px-6">
       {/* Mobile Menu & Search */}
@@ -27,10 +48,10 @@ export function Header({ onMenuClick }: HeaderProps) {
       </div>
 
       {/* Actions */}
-      <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3">
         <button className="btn h-9 min-h-0 bg-brand hover:bg-brand/90 text-white border-none gap-1.5 px-4 font-semibold rounded-md shadow-sm">
           <Plus className="h-4 w-4" />
-          <span className="hidden sm:inline">Create</span>
+          <span className="hidden sm:inline">{t('header.create')}</span>
         </button>
 
         <button className="btn btn-square btn-sm btn-ghost relative hover:bg-gray-100">
@@ -49,11 +70,41 @@ export function Header({ onMenuClick }: HeaderProps) {
           <Settings className="h-5 w-5 stroke-[1.5px] text-gray-600" />
         </button>
 
-        <div className="avatar placeholder ml-1 cursor-pointer hover:opacity-90 transition-opacity">
-            <div className="bg-brand text-white rounded-full w-8 shadow-sm">
-                <span className="text-xs font-semibold">JD</span>
+        <label className="hidden sm:flex items-center gap-2 rounded-md border border-gray-200 bg-white px-2 py-1 text-xs font-medium text-gray-600 shadow-sm">
+          <span>{t('header.language')}:</span>
+          <select value={currentLang} onChange={(e) => changeLang(e.target.value)} className="select select-xs select-ghost h-7 min-h-0 px-1">
+            <option value="pl">PL</option>
+            <option value="en">EN</option>
+          </select>
+        </label>
+
+        {user ? (
+          <div className="dropdown dropdown-end">
+            <div tabIndex={0} role="button" className="flex items-center gap-2 px-2 py-1 rounded-md hover:bg-gray-100 transition-colors cursor-pointer">
+              <div className="flex flex-col items-end hidden sm:flex">
+                <span className="text-sm font-medium leading-tight text-gray-700">{user.email}</span>
+                <span className="text-xs text-gray-500 font-semibold">{user.role} (Org: {user.organizationId})</span>
+              </div>
+              <div className="avatar placeholder shadow-sm rounded-full bg-[#0052CC] text-white w-9 h-9 flex items-center justify-center">
+                <span className="text-sm font-semibold">{getInitials(user.email)}</span>
+              </div>
             </div>
-        </div>
+              <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52 mt-2 border border-gray-100">
+              <li>
+                <button onClick={() => { logout(); window.location.href = '/auth/login'; }} className="text-red-600 hover:bg-red-50 hover:text-red-700">
+                  <LogOut className="h-4 w-4 mr-2" />
+                  {t('header.logout')}
+                </button>
+              </li>
+            </ul>
+          </div>
+        ) : (
+          <div className="avatar placeholder ml-1 cursor-pointer hover:opacity-90 transition-opacity">
+            <div className="bg-gray-300 text-white rounded-full w-8 h-8 flex items-center justify-center shadow-sm">
+                <span className="text-xs font-semibold">?</span>
+            </div>
+          </div>
+        )}
       </div>
     </header>
   )

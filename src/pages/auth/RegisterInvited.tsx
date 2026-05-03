@@ -1,9 +1,12 @@
 import { useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useMutation } from "@tanstack/react-query";
+import { authApi } from "../../api/auth.api";
 
 export function RegisterInvited() {
     const { t } = useTranslation('auth');
+    const navigate = useNavigate();
     
     const [searchParams] = useSearchParams();
     const emailFromInvite = searchParams.get("email") || ""; 
@@ -17,14 +20,27 @@ export function RegisterInvited() {
         token: tokenFromInvite
     });
 
+    const [errorMsg, setErrorMsg] = useState("");
+
+    const registerMutation = useMutation({
+        mutationFn: authApi.registerInvited,
+        onSuccess: () => {
+            // Po pomyślnej rejestracji zaproszonego, przenosimy do logowania
+            navigate("/auth/login");
+        },
+        onError: (error: any) => {
+            setErrorMsg(error.response?.data?.message || t("registerInvited.errors.generic"));
+        }
+    });
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
+        setErrorMsg("");
     };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        console.log("Register Invited payload:", formData);
-        // Tutaj w przyszłości podepniemy zapytanie do /auth/register-invited
+        registerMutation.mutate(formData);
     };
 
     return (
@@ -116,11 +132,18 @@ export function RegisterInvited() {
                     </div>
                 )}
 
+                {errorMsg && (
+                    <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-100 rounded-md">
+                        {errorMsg}
+                    </div>
+                )}
+
                 <button 
                     type="submit"
-                    className="w-full h-10 mt-2 bg-[#0052CC] hover:bg-[#0047b3] text-white font-medium rounded-md text-sm transition-colors"
+                    disabled={registerMutation.isPending}
+                    className="w-full h-10 mt-2 bg-[#0052CC] hover:bg-[#0047b3] disabled:bg-[#0052cc]/70 text-white font-medium rounded-md text-sm transition-colors flex items-center justify-center"
                 >
-                    {t("registerInvited.submitButton")}
+                    {registerMutation.isPending ? t("loading.saving", { ns: "common" }) : t("registerInvited.submitButton")}
                 </button>
             </form>
 
