@@ -1,0 +1,56 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "activeSprints": "Active sprints",
+    "backlog": "Backlog",
+    "reports": "Reports",
+    "settings": "Settings"
+  },
+  "yourWork": {
+    "assigned": "Assigned to me",
+    "recent": "Recent",
+    "done": "Done"
+  },
+  "header": {
+    "searchPlaceholder": "Search",
+    "create": "Create",
+    "help": "Help",
+    "settings": "Settings",
+    "logout": "Log out",
+    "language": "Language"
+  },
+  "loading": {
+    "saving": "Saving..."
+  },
+  "kanban": {
+    "breadcrumbs": "Projects / Frontend Evolution / Kanban board",
+    "sprintTitle": "Sprint 1",
+    "columns": {
+      "todo": "To Do",
+      "inProgress": "In Progress",
+      "inReview": "In Review",
+      "done": "Done"
+    }
+  },
+  "actions": {
+    "completeSprint": "Complete sprint",
+    "filters": {
+      "epic": "Epic",
+      "type": "Type",
+      "clearAll": "Clear all"
+    }
+  },
+  "issue": {
+    "priority": {
+      "high": "High",
+      "medium": "Medium",
+      "low": "Low"
+    }
+  },
+  "sidebar": {
+    "yourWorkTitle": "Your Work",
+    "userPlaceholder": "User",
+    "rolePlaceholder": "No role",
+    "organizationLabel": "Org"
+  }
+}

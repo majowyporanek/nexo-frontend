@@ -1,4 +1,5 @@
 import { Bug, CheckSquare, BookOpen, ArrowUp, ArrowRight, ArrowDown } from "lucide-react"
+import { useTranslation } from 'react-i18next'
 
 export type IssueType = "bug" | "task" | "story"
 export type Priority = "high" | "medium" | "low"
@@ -58,6 +59,7 @@ interface IssueCardProps {
 }
 
 export function IssueCard({ issue }: IssueCardProps) {
+  const { t } = useTranslation('common')
   const TypeIcon = issueTypeConfig[issue.type].icon
   const PriorityIcon = priorityConfig[issue.priority].icon
 
@@ -90,9 +92,11 @@ export function IssueCard({ issue }: IssueCardProps) {
         {/* Priority & Story Points & Assignee container */}
         <div className="flex items-center gap-1.5">
             {/* Priority */}
-            <PriorityIcon
-              className={`h-4 w-4 ${priorityConfig[issue.priority].color}`}
-            />
+            <div title={t(`issue.priority.${issue.priority}`)}>
+              <PriorityIcon
+                className={`h-4 w-4 ${priorityConfig[issue.priority].color}`}
+              />
+            </div>
 
             {/* Story Points */}
             {issue.storyPoints && (

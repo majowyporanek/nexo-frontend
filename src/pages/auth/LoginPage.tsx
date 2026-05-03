@@ -26,7 +26,7 @@ export function LoginPage() {
             navigate("/");
         },
         onError: (error: any) => {
-            setErrorMsg(error.response?.data?.message || "Wystąpił błąd podczas logowania");
+            setErrorMsg(error.response?.data?.message || t("login.errors.generic"));
         }
     });
 
@@ -100,7 +100,7 @@ export function LoginPage() {
                     disabled={loginMutation.isPending}
                     className="w-full h-10 mt-2 bg-[#0052CC] hover:bg-[#0047b3] disabled:bg-[#0052cc]/70 text-white font-medium rounded-md text-sm transition-colors flex items-center justify-center"
                 >
-                    {loginMutation.isPending ? "Zapisywanie..." : t("login.submitButton")}
+                    {loginMutation.isPending ? t("loading.saving", { ns: "common" }) : t("login.submitButton")}
                 </button>
             </form>
 

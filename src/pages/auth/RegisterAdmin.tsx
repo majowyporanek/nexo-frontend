@@ -25,7 +25,7 @@ export function RegisterAdmin() {
             navigate("/auth/login");
         },
         onError: (error: any) => {
-            setErrorMsg(error.response?.data?.message || "Wystąpił błąd podczas rejestracji");
+            setErrorMsg(error.response?.data?.message || t("registerAdmin.errors.generic"));
         }
     });
 
@@ -136,7 +136,7 @@ export function RegisterAdmin() {
                     disabled={registerMutation.isPending}
                     className="w-full h-10 mt-2 bg-[#0052CC] hover:bg-[#0047b3] disabled:bg-[#0052cc]/70 text-white font-medium rounded-md text-sm transition-colors flex items-center justify-center"
                 >
-                    {registerMutation.isPending ? "Zapisywanie..." : t("registerAdmin.submitButton")}
+                    {registerMutation.isPending ? t("loading.saving", { ns: "common" }) : t("registerAdmin.submitButton")}
                 </button>
             </form>
 

@@ -1,5 +1,6 @@
 import { Search, Plus, Bell, Settings, HelpCircle, Menu, LogOut } from "lucide-react"
 import { useAuthStore } from "../store/useAuthStore"
+import { useTranslation } from "react-i18next"
 
 interface HeaderProps {
   onMenuClick?: () => void
@@ -7,6 +8,7 @@ interface HeaderProps {
 
 export function Header({ onMenuClick }: HeaderProps) {
   const { user, logout } = useAuthStore()
+  const { t, i18n } = useTranslation('common')
 
   // Prosta funkcja do pobierania inicjałów z maila, np. "test.user@example.com" => "TU"
   const getInitials = (email: string) => {
@@ -16,6 +18,13 @@ export function Header({ onMenuClick }: HeaderProps) {
     }
     return email.substring(0, 2).toUpperCase()
   }
+
+  const changeLang = (lng: string) => {
+    i18n.changeLanguage(lng)
+    localStorage.setItem('nexo_lang', lng)
+  }
+
+  const currentLang = i18n.language || 'pl'
 
   return (
     <header className="flex h-[72px] items-center justify-between border-b border-base-300 bg-white px-6">
@@ -39,10 +48,10 @@ export function Header({ onMenuClick }: HeaderProps) {
       </div>
 
       {/* Actions */}
-      <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3">
         <button className="btn h-9 min-h-0 bg-brand hover:bg-brand/90 text-white border-none gap-1.5 px-4 font-semibold rounded-md shadow-sm">
           <Plus className="h-4 w-4" />
-          <span className="hidden sm:inline">Create</span>
+          <span className="hidden sm:inline">{t('header.create')}</span>
         </button>
 
         <button className="btn btn-square btn-sm btn-ghost relative hover:bg-gray-100">
@@ -61,6 +70,14 @@ export function Header({ onMenuClick }: HeaderProps) {
           <Settings className="h-5 w-5 stroke-[1.5px] text-gray-600" />
         </button>
 
+        <label className="hidden sm:flex items-center gap-2 rounded-md border border-gray-200 bg-white px-2 py-1 text-xs font-medium text-gray-600 shadow-sm">
+          <span>{t('header.language')}:</span>
+          <select value={currentLang} onChange={(e) => changeLang(e.target.value)} className="select select-xs select-ghost h-7 min-h-0 px-1">
+            <option value="pl">PL</option>
+            <option value="en">EN</option>
+          </select>
+        </label>
+
         {user ? (
           <div className="dropdown dropdown-end">
             <div tabIndex={0} role="button" className="flex items-center gap-2 px-2 py-1 rounded-md hover:bg-gray-100 transition-colors cursor-pointer">
@@ -72,11 +89,11 @@ export function Header({ onMenuClick }: HeaderProps) {
                 <span className="text-sm font-semibold">{getInitials(user.email)}</span>
               </div>
             </div>
-            <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52 mt-2 border border-gray-100">
+              <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52 mt-2 border border-gray-100">
               <li>
                 <button onClick={() => { logout(); window.location.href = '/auth/login'; }} className="text-red-600 hover:bg-red-50 hover:text-red-700">
                   <LogOut className="h-4 w-4 mr-2" />
-                  Wyloguj się
+                  {t('header.logout')}
                 </button>
               </li>
             </ul>

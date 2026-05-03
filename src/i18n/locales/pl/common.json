@@ -1,0 +1,56 @@
+{
+  "nav": {
+    "dashboard": "Pulpit",
+    "activeSprints": "Aktywne sprinty",
+    "backlog": "Backlog",
+    "reports": "Raporty",
+    "settings": "Ustawienia"
+  },
+  "yourWork": {
+    "assigned": "Przydzielone do mnie",
+    "recent": "Ostatnie",
+    "done": "Zrobione"
+  },
+  "header": {
+    "searchPlaceholder": "Szukaj",
+    "create": "Utwórz",
+    "help": "Pomoc",
+    "settings": "Ustawienia",
+    "logout": "Wyloguj się",
+    "language": "Język"
+  },
+  "loading": {
+    "saving": "Zapisywanie..."
+  },
+  "kanban": {
+    "breadcrumbs": "Projekty / Frontend Evolution / Tablica Kanban",
+    "sprintTitle": "Sprint 1",
+    "columns": {
+      "todo": "Do zrobienia",
+      "inProgress": "W trakcie",
+      "inReview": "Do sprawdzenia",
+      "done": "Zrobione"
+    }
+  },
+  "actions": {
+    "completeSprint": "Zakończ sprint",
+    "filters": {
+      "epic": "Epic",
+      "type": "Typ",
+      "clearAll": "Wyczyść"
+    }
+  },
+  "issue": {
+    "priority": {
+      "high": "Wysoki",
+      "medium": "Średni",
+      "low": "Niski"
+    }
+  },
+  "sidebar": {
+    "yourWorkTitle": "Twoja praca",
+    "userPlaceholder": "Użytkownik",
+    "rolePlaceholder": "Brak roli",
+    "organizationLabel": "Org"
+  }
+}
