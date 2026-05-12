@@ -17,7 +17,7 @@ export function RegisterInvited() {
         lastName: "",
         email: emailFromInvite,
         password: "",
-        token: tokenFromInvite
+        invitationToken: tokenFromInvite
     });
 
     const [errorMsg, setErrorMsg] = useState("");
@@ -25,7 +25,6 @@ export function RegisterInvited() {
     const registerMutation = useMutation({
         mutationFn: authApi.registerInvited,
         onSuccess: () => {
-            // Po pomyślnej rejestracji zaproszonego, przenosimy do logowania
             navigate("/auth/login");
         },
         onError: (error: any) => {
@@ -93,7 +92,7 @@ export function RegisterInvited() {
                         value={formData.email}
                         onChange={handleChange}
                         required
-                        readOnly={!!emailFromInvite} // Zablokuj jeśli przyszedł z linku
+                        readOnly={!!emailFromInvite}
                         placeholder={t("registerInvited.emailPlaceholder")}
                         className="w-full h-10 px-3 py-2 bg-gray-50 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#0052CC] focus:border-[#0052CC] transition-colors cursor-not-allowed"
                     />
@@ -114,7 +113,6 @@ export function RegisterInvited() {
                     />
                 </div>
 
-                {/* Ukryte pole na token z zaproszenia, backend go potrzebuje */}
                 {!tokenFromInvite && (
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="token">
@@ -123,8 +121,8 @@ export function RegisterInvited() {
                         <input 
                             type="text" 
                             id="token"
-                            name="token"
-                            value={formData.token}
+                            name="invitationToken"
+                            value={formData.invitationToken}
                             onChange={handleChange}
                             required
                             className="w-full h-10 px-3 py-2 bg-white border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#0052CC] focus:border-[#0052CC] transition-colors"

@@ -6,79 +6,109 @@ interface JwtPayload {
   role: string;
   organizationId: number;
   exp: number;
-  iat: number;
 }
 
 interface User {
+  id: number;
   email: string;
   role: string;
   organizationId: number;
+  organizationName?: string;
+  firstName?: string;      
+  lastName?: string;      
+  username?: string;
 }
 
 interface AuthState {
   user: User | null;
   token: string | null;
   isAuthenticated: boolean;
-  login: (token: string) => void;
+  login: (token: string) => Promise<void>;
   logout: () => void;
-  checkAuth: () => void;
+  checkAuth: () => Promise<void>;
+  updateUserDetails: (details: Partial<User>) => void; 
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
+const API_URL = import.meta.env.VITE_API_URL;
+
+export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
   token: null,
   isAuthenticated: false,
 
-  login: (token: string) => {
-    localStorage.setItem('nexo_token', token);
+  login: async (token: string) => {
     try {
+      localStorage.setItem('nexo_token', token);
       const decoded = jwtDecode<JwtPayload>(token);
-      const user: User = {
-        email: decoded.sub,
-        role: decoded.role,
-        organizationId: decoded.organizationId
-      };
-      set({ token, user, isAuthenticated: true });
+
+      const response = await fetch(`${API_URL}/users`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const users: User[] = await response.json();
+      const fullUserData = users.find(u => u.email === decoded.sub);
+
+      if (fullUserData) {
+        set({ token, user: fullUserData, isAuthenticated: true });
+        window.location.replace('/dashboard'); 
+      }
     } catch (error) {
-      console.error('Invalid token during login', error);
+      console.error('Login error:', error);
       set({ token: null, user: null, isAuthenticated: false });
     }
+  },
+
+  checkAuth: async () => {
+    const token = localStorage.getItem('nexo_token');
+    if (!token) return;
+
+    try {
+      const decoded = jwtDecode<JwtPayload>(token);
+      
+
+      if (decoded.exp * 1000 < Date.now()) {
+        get().logout();
+        return;
+      }
+
+      set({ 
+        token, 
+        isAuthenticated: true,
+        user: { 
+          id: 0, 
+          email: decoded.sub, 
+          role: decoded.role, 
+          organizationId: decoded.organizationId 
+        } 
+      });
+
+      const response = await fetch(`${API_URL}/users`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      
+      if (response.ok) {
+        const users: User[] = await response.json();
+        const fullUserData = users.find(u => u.email === decoded.sub);
+        if (fullUserData) {
+          set({ user: fullUserData });
+        }
+      }
+    } catch (error) {
+      console.error('CheckAuth error:', error);
+      get().logout();
+    }
+  },
+
+  updateUserDetails: (details: Partial<User>) => {
+    set((state) => ({
+      user: state.user ? { ...state.user, ...details } : null
+    }));
   },
 
   logout: () => {
     localStorage.removeItem('nexo_token');
     set({ token: null, user: null, isAuthenticated: false });
+    window.location.href = '/auth/login';
   },
-
-  checkAuth: () => {
-    const token = localStorage.getItem('nexo_token');
-    if (token) {
-      try {
-        const decoded = jwtDecode<JwtPayload>(token);
-        // Sprawdź czy token wygasł (exp jest w sekundach, Data.now() zwraca milisekundy)
-        if (decoded.exp * 1000 < Date.now()) {
-          console.warn('Token expired');
-          localStorage.removeItem('nexo_token');
-          set({ token: null, user: null, isAuthenticated: false });
-          return;
-        }
-
-        const user: User = {
-          email: decoded.sub,
-          role: decoded.role,
-          organizationId: decoded.organizationId
-        };
-        set({ token, user, isAuthenticated: true });
-      } catch (error) {
-        console.error('Invalid token during checkAuth', error);
-        localStorage.removeItem('nexo_token');
-        set({ token: null, user: null, isAuthenticated: false });
-      }
-    } else {
-      set({ token: null, user: null, isAuthenticated: false });
-    }
-  }
 }));
 
-// Zainicjuj stan na podstawie tego, co jest w localStorage
 useAuthStore.getState().checkAuth();

@@ -65,15 +65,12 @@ export function IssueCard({ issue }: IssueCardProps) {
 
   return (
     <div className="group cursor-pointer rounded bg-white p-3 shadow-[0_1px_2px_rgba(9,30,66,0.25)] transition-all duration-150 hover:bg-gray-50 border-none mx-1">
-      {/* Summary */}
       <p className="mb-3 text-[14px] leading-snug text-gray-800 font-normal">
         {issue.summary}
       </p>
 
-      {/* Footer */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-1.5">
-          {/* Issue Type */}
           <div
             className={`flex h-5 w-5 items-center justify-center rounded-sm ${issueTypeConfig[issue.type].bgColor}`}
             title={issue.type}
@@ -83,29 +80,24 @@ export function IssueCard({ issue }: IssueCardProps) {
             />
           </div>
 
-          {/* Issue Key */}
           <span className="text-[13px] font-medium text-gray-500 hover:underline hover:text-brand">
             {issue.key}
           </span>
         </div>
 
-        {/* Priority & Story Points & Assignee container */}
         <div className="flex items-center gap-1.5">
-            {/* Priority */}
             <div title={t(`issue.priority.${issue.priority}`)}>
               <PriorityIcon
                 className={`h-4 w-4 ${priorityConfig[issue.priority].color}`}
               />
             </div>
 
-            {/* Story Points */}
             {issue.storyPoints && (
               <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-gray-100 px-1 text-xs font-bold text-gray-600">
                 {issue.storyPoints}
               </span>
             )}
 
-            {/* Assignee */}
             {issue.assignee && (
               <div
                 className="flex h-6 w-6 items-center justify-center rounded-full text-[10px] font-bold text-white shadow-sm ml-1"

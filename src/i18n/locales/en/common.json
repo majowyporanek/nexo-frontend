@@ -4,7 +4,9 @@
     "activeSprints": "Active sprints",
     "backlog": "Backlog",
     "reports": "Reports",
-    "settings": "Settings"
+    "settings": "Settings",
+    "myProfile": "My account",
+    "organization": "Organization"
   },
   "yourWork": {
     "assigned": "Assigned to me",
@@ -21,6 +23,17 @@
   },
   "loading": {
     "saving": "Saving..."
+  },
+  "dashboard": {
+    "welcome": "Welcome",
+    "subtitle": "Here is what's happening in your projects.",
+    "yourBoards": "Your boards",
+    "stages_count": "Stages",
+    "noBoards": "You don't have any boards yet.",
+    "stats": {
+      "recent": "Recent",
+      "done": "Done"
+    }
   },
   "kanban": {
     "breadcrumbs": "Projects / Frontend Evolution / Kanban board",
@@ -51,6 +64,153 @@
     "yourWorkTitle": "Your Work",
     "userPlaceholder": "User",
     "rolePlaceholder": "No role",
-    "organizationLabel": "Org"
-  }
-}
+    "organizationLabel": "Org",
+    "boardsTitle": "Boards",
+    "createBoard": "Create new board"
+  },
+  "projects": {
+    "title": "Projects",
+    "subtitle": "All workspaces in your organization",
+    "createButton": "Create project",
+    "emptyState": {
+      "title": "No active projects",
+      "description": "Start by creating your first Kanban board.",
+      "action": "Create first project"
+    },
+    "card": {
+      "type": "Kanban Board"
+    },
+    "createPrompt": "Enter your project name (e.g., Nexo Project):",
+    "loading": "Loading your projects..."
+  },
+  "profile": {
+    "subtitle": "Manage your personal data and security settings",
+    "accountInfo": "Account information",
+    "defaultUsername": "User",
+    "email": "Email address",
+    "role": "System role",
+    "title": "My profile",
+    "logout": "Log out",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "organizationName": "Organization name",
+    "fullName": "Full name"
+  },
+  "organization": {
+    "title": "Organization Settings",
+    "subtitle": "Manage members and invitations",
+    "name": "Organization Name",
+    "members": "Members",
+    "inviteMember": "Invite User",
+    "manageMembers": "Manage Team",
+    "dangerZone": "Danger Zone",
+    "deleteOrg": "Delete Organization",
+    "deleteWarning": "This action cannot be undone."
+  },
+  "members": {
+    "listTitle": "Team Members",
+    "me": "You",
+    "loading": "Loading team members...",
+    "table": {
+      "user": "User",
+      "role": "Role",
+      "status": "Status",
+      "actionHeader": "Actions"
+    },
+    "actions": {
+      "remove": "Remove from organization",
+      "changeRole": "Change role to {{role}}",
+      "changeToUser": "Change to USER",
+      "changeToAdmin": "Change to ADMIN",
+      "roleChanged": "User {{email}} role was changed to {{role}}",
+      "confirmRemoveTitle": "Remove user",
+      "confirmRemoveQuestion": "Are you sure you want to remove {{name}}? This operation cannot be undone.",
+      "cancel": "Cancel",
+      "confirmRemove": "Remove",
+      "confirmRole": "Change role"
+    },
+    "inviteModal": {
+      "title": "Invite to Team",
+      "emailLabel": "Email Address",
+      "roleLabel": "Role",
+      "send": "Send Invitation",
+      "cancel": "Cancel"
+    }
+  },
+  "invitations": {
+    "title": "Invitations",
+    "sendInvite": "Invite to the organization",
+    "emailLabel": "Colleague's email address",
+    "description": "Enter e-mail to send an invitation",
+    "placeholder": "e.g., marek@firma.pl",
+    "success": "Invitation sent!",
+    "error": "Invitation failed to send."
+  },
+  "boards": {
+    "createTitle": "Create new board",
+    "formTitle": "Board title",
+    "formTitlePlaceholder": "e.g. Mobile Application Development",
+    "formDescription": "Description (optional)",
+    "formDescriptionPlaceholder": "Short description of this board goal"
+  },
+  "common": {
+    "cancel": "Cancel",
+    "create": "Create",
+    "error": "Error",
+    "update": "Update",
+    "add": "Add"
+  },
+  "board": {
+    "projects": "Projects",
+    "createIssue": "Create task",
+    "addCard": "Add tab",
+    "issueTitle": "Issue Title",
+    "member": "Member",
+    "notifications": {
+      "userAdded": "Member added to the board"
+    },
+    "description": "Description",
+    "assignee": "Assignee",
+    "unassigned": "Unassigned",
+    "priority": "Priority",
+    "createdAt": "Created at",
+    "placeholders": {
+      "title": "What needs to be done?",
+      "description": "Add a detailed description"
+    },
+    "errors": {
+      "createFailed": "Failed to create the issue in the database.",
+      "updateFailed": "Failed to save changes. Please try again.",
+      "addMemberFailed": "Failed to add member to the board."
+    },
+    "stages": {
+      "PREPARATION": "Preparation",
+      "TO DO": "To do",
+      "IN PROGRESS": "In progress",
+      "TESTING": "Testing",
+      "DONE": "Done",
+      "CODE REVIEW": "Code Review",
+      "MERGED READY FOR TESTING": "Merged Ready for Testing",
+      "IN TESTING": "In Testing"
+    },
+    "modal": {
+      "createIn": "New task in:",
+      "title": "Task title",
+      "placeholder": "Enter the name of the task",
+      "description": "Description",
+      "descPlaceholder": "Add detailed description"
+    },
+    "error": {
+      "createTask": "Failed to create task."
+    }
+  },
+  "priorities": {
+      "LOWEST": "Lowest",
+      "LOW": "Low",
+      "MEDIUM": "Medium",
+      "HIGH": "High",
+      "HIGHEST": "Highest"
+    }
+}  
+
+
