@@ -4,7 +4,9 @@
     "activeSprints": "Aktywne sprinty",
     "backlog": "Backlog",
     "reports": "Raporty",
-    "settings": "Ustawienia"
+    "settings": "Ustawienia",
+    "myProfile": "Mój Profil",
+    "organization": "Organizacja"
   },
   "yourWork": {
     "assigned": "Przydzielone do mnie",
@@ -21,6 +23,17 @@
   },
   "loading": {
     "saving": "Zapisywanie..."
+  },
+  "dashboard": {
+    "welcome": "Witaj",
+    "subtitle": "Oto co dzieje się w Twoich projektach.",
+    "yourBoards": "Twoje tablice",
+    "stages_count": "Etapy",
+    "noBoards": "Nie masz jeszcze żadnych tablic.",
+    "stats": {
+      "recent": "Ostatnie",
+      "done": "Zrobione"
+    }
   },
   "kanban": {
     "breadcrumbs": "Projekty / Frontend Evolution / Tablica Kanban",
@@ -51,6 +64,152 @@
     "yourWorkTitle": "Twoja praca",
     "userPlaceholder": "Użytkownik",
     "rolePlaceholder": "Brak roli",
-    "organizationLabel": "Org"
-  }
+    "organizationLabel": "Org",
+    "boardsTitle": "Tablice",
+    "addBoard": "Utwórz nową tablicę",
+    "createBoard": "Utwórz nową tablicę"
+  },
+  "projects": {
+    "title": "Projekty",
+    "subtitle": "Wszystkie przestrzenie Twojej organizacji",
+    "createButton": "Utwórz projekt",
+    "emptyState": {
+      "title": "Brak aktywnych projektów",
+      "description": "Zacznij od stworzenia swojej pierwszej tablicy Kanban.",
+      "action": "Stwórz pierwszy projekt"
+    },
+    "card": {
+      "type": "Tablica Kanban"
+    },
+    "createPrompt": "Wpisz nazwę swojego projektu (np. Projekt Nexo):",
+    "loading": "Ładowanie Twoich projektów..."
+  },
+  "profile": {
+    "subtitle": "Zarządzaj swoimi danymi osobowymi i ustawieniami bezpieczeństwa",
+    "accountInfo": "Informacje o koncie",
+    "defaultUsername": "Użytkownik",
+    "email": "Adres e-mail",
+    "role": "Rola w systemie",
+    "title": "Mój profil",
+    "logout": "Wyloguj się",
+    "firstName": "Imię",
+    "lastName": "Nazwisko",
+    "organizationName": "Nazwa organizacji",
+    "fullName": "Imię i nazwisko"
+  },
+  "organization": {
+    "title": "Ustawienia organizacji",
+    "name": "Nazwa organizacji",
+    "subtitle": "Zarządzaj członkami i zaproszeniami",
+    "members": "Członkowie",
+    "inviteMember": "Zaproś użytkownika",
+    "manageMembers": "Zarządzaj zespołem",
+    "dangerZone": "Strefa zagrożenia",
+    "deleteOrg": "Usuń organizację",
+    "deleteWarning": "Tej operacji nie można cofnąć."
+  },
+  "members": {
+    "listTitle": "Członkowie zespołu",
+    "loading": "Ładowanie zespołu...",
+    "me": "Ty",
+    "table": {
+      "user": "Użytkownik",
+      "role": "Rola",
+      "status": "Status",
+      "actionHeader": "Akcje"
+    },
+    "actions": {
+      "remove": "Usuń z organizacji",
+      "changeToUser": "Zmień na USER",
+      "changeToAdmin": "Zmień na ADMIN",
+      "roleChanged": "Rola użytkownika {{email}} została zmieniona na {{role}}",
+      "confirmRemoveTitle": "Usuń użytkownika",
+      "confirmRemoveQuestion": "Czy na pewno chcesz usunąć użytkownika {{name}}? Tej operacji nie można cofnąć.",
+      "cancel": "Anuluj",
+      "confirmRemove": "Usuń",
+      "confirmRole": "Zmień rolę"
+    },
+    "inviteModal": {
+      "title": "Zaproś do zespołu",
+      "emailLabel": "Adres e-mail",
+      "roleLabel": "Rola",
+      "send": "Wyślij zaproszenie",
+      "cancel": "Anuluj"
+    }
+  },
+  "invitations": {
+    "title": "Zaproszenia",
+    "sendInvite": "Zaproś do organizacji",
+    "emailLabel": "Adres e-mail współpracownika",
+    "placeholder": "np. marek@firma.pl",
+    "description": "Podaj e-mail, aby wysłać zaproszenie.",
+    "success": "Zaproszenie zostało wysłane!",
+    "error": "Nie udało się wysłać zaproszenia."
+  },
+  "boards": {
+    "createTitle": "Utwórz nową tablicę",
+    "formTitle": "Nazwa tablicy",
+    "formTitlePlaceholder": "np. Rozwój Aplikacji Mobilnej",
+    "formDescription": "Opis (opcjonalnie)",
+    "formDescriptionPlaceholder": "Krótki opis celu tej tablicy..."
+  },
+  "common": {
+    "cancel": "Anuluj",
+    "create": "Utwórz",
+    "error": "Błąd",
+    "update": "Aktualizuj",
+    "add": "Dodaj"
+  },
+  "board": {
+    "projects": "Projekty",
+    "createIssue": "Utwórz zadanie",
+    "addCard": "Dodaj kartę",
+    "issueTitle": "Tytuł zadania",
+    "member": "członek",
+    "notifications": {
+      "userAdded": "Użytkownik został dodany do tablicy!"
+    },
+    "description": "Opis",
+    "assignee": "Osoba przypisana",
+    "unassigned": "Brak przypisania",
+    "priority": "Priorytet",
+    "createdAt": "Utworzono",
+    "placeholders": {
+      "title": "Co trzeba zrobić?",
+      "description": "Dodaj szczegółowy opis zadania"
+    },
+    "errors": {
+      "createFailed": "Nie udało się utworzyć zadania w bazie danych.",
+      "updateFailed": "Nie udało się zapisać zmian. Spróbuj ponownie.",
+      "addMemberFailed": "Wystąpił błąd podczas dodawania użytkownika do tablicy."
+    },
+    "stages": {
+      "PREPARATION": "Przygotowanie",
+      "TO DO": "Do zrobienia",
+      "IN PROGRESS": "W toku",
+      "TESTING": "Testowanie",
+      "DONE": "Zakończone",
+      "CODE REVIEW": "Przegląd kodu",
+      "MERGED READY FOR TESTING": "Połączone, gotowe do testowania",
+      "IN TESTING": "W trakcie testowania"
+    },
+    "modal": {
+      "createIn": "Nowe zadanie w kolumnie:",
+      "title": "Tytuł zadania",
+      "placeholder": "Wpisz nazwę zadania",
+      "description": "Opis",
+      "descPlaceholder": "Dodaj bardziej szczegółowy opis"
+    },
+    "error": {
+      "createTask": "Nie udało się utworzyć zadania."
+    }
+  },
+   "priorities": {
+      "LOWEST": "Najniższy",
+      "LOW": "Niski",
+      "MEDIUM": "Średni",
+      "HIGH": "Wysoki",
+      "HIGHEST": "Najwyższy"
+    }
 }
+

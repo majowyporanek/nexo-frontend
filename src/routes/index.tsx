@@ -1,12 +1,17 @@
-import { createBrowserRouter } from "react-router-dom"
-import App from "../App"
-import { MainLayout } from "../layout/MainLayout"
-import { ProtectedRoute } from "./components/ProtectedRoute"
+import { createBrowserRouter, Navigate } from "react-router-dom";
+import App from "../App";
+import { MainLayout } from "../layout/MainLayout";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 
 import { AuthLayout } from "../pages/auth/AuthLayout";
 import { RegisterAdmin } from "../pages/auth/RegisterAdmin";
 import { RegisterInvited } from "../pages/auth/RegisterInvited";
 import { LoginPage } from "../pages/auth/LoginPage";
+import { UserProfile } from "../pages/profile/UserProfile";
+import { OrganizationSettings } from "../pages/organization/OrganizationSettings";
+import { MembersList } from "../pages/organization/MembersList";
+import { BoardView } from "../pages/projects/BoardView";
+import { Dashboard } from "../pages/projects/Dashboard";
 
 export const router = createBrowserRouter([
     {
@@ -17,12 +22,24 @@ export const router = createBrowserRouter([
                 element: <MainLayout />,
                 children: [
                     {
-                        index: true,
-                        element: <App /> // Temporary Dashboard View
+                        path: "dashboard",
+                        element: <Dashboard /> 
                     },
                     {
-                        path: "board/:boardId",
-                        element: <div>Kanban Board Placeholder (wait for UX)</div>
+                        path: "boards/:boardId",
+                        element: <BoardView />
+                    },
+                    {
+                        path: "profile",
+                        element: <UserProfile />
+                    },
+                    {
+                        path: "organization/settings",
+                        element: <OrganizationSettings />
+                    },
+                    {
+                        path: "organization/members",
+                        element: <MembersList />
                     }
                 ]
             }

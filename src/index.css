@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-@plugin "daisyui";
+@config "../tailwind.config.js";
 
 @theme inline {
   --color-brand: #891d42;
