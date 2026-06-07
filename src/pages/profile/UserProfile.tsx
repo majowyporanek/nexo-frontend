@@ -1,7 +1,7 @@
 import { useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { useAuthStore } from "../../store/useAuthStore";
-import { Mail, Shield, LogOut, User as UserIcon, Building2, Loader2 } from "lucide-react";
+import { Mail, LogOut, User as UserIcon, Building2, Loader2 } from "lucide-react";
 
 export function UserProfile() {
   const { t } = useTranslation('common');

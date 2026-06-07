@@ -38,7 +38,7 @@ const navItems = [
   { icon: Zap, key: "nav.activeSprints", path: "/active-sprints" },
   { icon: Layers, key: "nav.backlog", path: "/backlog" },
   { icon: BarChart3, key: "nav.reports", path: "/reports" },
-  { icon: Settings, key: "nav.settings", path: "/settings" },
+  { icon: Settings, key: "nav.settings", path: "/organization/settings" },
 ]
 
 const yourWorkItems = [
