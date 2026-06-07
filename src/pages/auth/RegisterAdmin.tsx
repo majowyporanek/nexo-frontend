@@ -121,6 +121,7 @@ export function RegisterAdmin() {
                         value={formData.password}
                         onChange={handleChange}
                         required
+                        autoComplete="new-password"
                         className="w-full h-10 px-3 py-2 bg-white border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#0052CC] focus:border-[#0052CC] transition-colors"
                     />
                 </div>
