@@ -91,6 +91,7 @@
     "role": "System role",
     "title": "My profile",
     "logout": "Log out",
+    "saveChanges": "Save changes",
     "firstName": "First name",
     "lastName": "Last name",
     "organizationName": "Organization name",
