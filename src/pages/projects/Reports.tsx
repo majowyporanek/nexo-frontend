@@ -1,46 +1,17 @@
 import { useMemo } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { BarChart3, CheckCircle2, CircleSlash2, Users, Layers3 } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { useAuthStore } from "../../store/useAuthStore";
-import { boardsApi } from "../../api/boards.api";
-import { issuesApi } from "../../api/issues.api";
-import { usersApi } from "../../api/users.api";
+import { useMyBoards, useOrgIssues, useOrgUsers } from "../../lib/workspace-hooks";
 import { buildUserDisplayName, getBoardById, isActiveIssue, isCompletedIssue } from "../../lib/workspace-data";
 
 const priorityOrder = ["HIGHEST", "HIGH", "MEDIUM", "LOW", "LOWEST"];
 
 export const Reports = () => {
-  const { token, user } = useAuthStore();
   const { t } = useTranslation("common");
 
-  const { data: boards = [] } = useQuery({
-    queryKey: ["boards", user?.id, "reports"],
-    queryFn: async () => {
-      if (!token) return [];
-      const allBoards = await boardsApi.getBoards(token);
-      return user?.id ? allBoards.filter((board) => board.userIds.includes(user.id)) : allBoards;
-    },
-    enabled: !!token,
-  });
-
-  const { data: issues = [] } = useQuery({
-    queryKey: ["issues", user?.organizationId, "reports"],
-    queryFn: async () => {
-      if (!token) return [];
-      return issuesApi.getIssues(token);
-    },
-    enabled: !!token,
-  });
-
-  const { data: users = [] } = useQuery({
-    queryKey: ["users", user?.organizationId, "reports"],
-    queryFn: async () => {
-      if (!token) return [];
-      return usersApi.getUsers(token);
-    },
-    enabled: !!token,
-  });
+  const { data: boards = [] } = useMyBoards();
+  const { data: issues = [] } = useOrgIssues();
+  const { data: users = [] } = useOrgUsers();
 
   // Restrict all metrics to issues that belong to the user's own boards
   const myBoardIds = useMemo(() => new Set(boards.map((board) => board.id)), [boards]);

@@ -2,8 +2,9 @@ import { useState } from "react"
 import { useAuthStore } from "../store/useAuthStore"
 import { useTranslation } from 'react-i18next'
 import { Link, useLocation, useNavigate } from "react-router-dom"
-import { useQuery } from "@tanstack/react-query"
-import { issuesApi } from "../api/issues.api"
+import { Board } from "../api/boards.api"
+import { useOrgIssues } from "../lib/workspace-hooks"
+import { isCompletedIssue, isRecentIssue } from "../lib/workspace-data"
 import {
   LayoutDashboard,
   Zap,
@@ -20,21 +21,6 @@ import {
   Plus,
   Layout
 } from "lucide-react"
-
-interface Stage {
-  id: number;
-  name: string;
-  type: string;
-  active: boolean;
-}
-
-interface Board {
-  id: number;
-  name: string;
-  organizationId: number;
-  userIds: number[];
-  stages?: Stage[];
-}
 
 interface SidebarProps {
   isOpen?: boolean;
@@ -54,41 +40,19 @@ const navItems = [
 export function Sidebar({ isOpen = false, onClose, onOpenCreateBoard, boards }: SidebarProps) {
   const [yourWorkOpen, setYourWorkOpen] = useState(true)
   const [boardsOpen, setBoardsOpen] = useState(true)
-  const { user, token } = useAuthStore()
+  const { user } = useAuthStore()
   const { t } = useTranslation('common')
   const location = useLocation()
   const navigate = useNavigate()
 
-  const { data: issues = [] } = useQuery({
-    queryKey: ['issues', 'all', user?.id],
-    queryFn: () => issuesApi.getIssues(token || ""),
-    enabled: !!token && !!user?.id,
-  })
-
-  // Stage ids (across the user's boards) that represent completed work
-  const doneStageIds = new Set(
-    boards.flatMap((b) => (b.stages || []).filter((s) => s.type === 'DONE').map((s) => s.id))
-  )
+  const { data: issues = [] } = useOrgIssues()
 
   const myIssues = issues.filter((i) => i.assigneeId === user?.id)
-  const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000
 
   const yourWorkItems = [
-    {
-      icon: ClipboardList,
-      key: "yourWork.assigned",
-      count: myIssues.length,
-    },
-    {
-      icon: Clock,
-      key: "yourWork.recent",
-      count: myIssues.filter((i) => i.createdAt && new Date(i.createdAt).getTime() >= sevenDaysAgo).length,
-    },
-    {
-      icon: CheckCircle2,
-      key: "yourWork.done",
-      count: myIssues.filter((i) => doneStageIds.has(i.stageId)).length,
-    },
+    { icon: ClipboardList, key: "yourWork.assigned", count: myIssues.length },
+    { icon: Clock, key: "yourWork.recent", count: myIssues.filter((i) => isRecentIssue(i)).length },
+    { icon: CheckCircle2, key: "yourWork.done", count: myIssues.filter((i) => isCompletedIssue(i, boards)).length },
   ]
 
   const getInitials = (email: string) => {

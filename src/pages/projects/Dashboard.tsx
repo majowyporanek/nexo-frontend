@@ -1,44 +1,24 @@
-import { useQuery } from "@tanstack/react-query";
-import { boardsApi } from "../../api/boards.api";
-import { issuesApi } from "../../api/issues.api";
 import { useAuthStore } from "../../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Layout, CheckCircle, Clock } from "lucide-react";
+import { useMyBoards, useOrgIssues } from "../../lib/workspace-hooks";
+import { isCompletedIssue, isRecentIssue } from "../../lib/workspace-data";
 
 export const Dashboard = () => {
-  const { token, user } = useAuthStore();
+  const { user } = useAuthStore();
   const { t } = useTranslation('common');
   const navigate = useNavigate();
 
-  const { data: boards, isLoading } = useQuery({
-    queryKey: ['boards', user?.id], 
-    queryFn: async () => {
-      if (!token || !user?.id) return [];
-      
-      const allBoards = await boardsApi.getBoards(token);
-      return allBoards.filter((board: any) => board.userIds.includes(user.id));
-    },
-
-    enabled: !!token && !!user?.id
-  });
-
-  const { data: issues = [] } = useQuery({
-    queryKey: ['issues', 'all', user?.id],
-    queryFn: () => issuesApi.getIssues(token || ""),
-    enabled: !!token && !!user?.id
-  });
+  const { data: boards = [], isLoading } = useMyBoards();
+  const { data: issues = [] } = useOrgIssues();
 
   // Issues within the boards the user belongs to
-  const myBoardIds = new Set((boards || []).map((b: any) => b.id));
-  const doneStageIds = new Set(
-    (boards || []).flatMap((b: any) => (b.stages || []).filter((s: any) => s.type === 'DONE').map((s: any) => s.id))
-  );
+  const myBoardIds = new Set(boards.map((b) => b.id));
   const boardIssues = issues.filter((i) => myBoardIds.has(i.boardId));
-  const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
 
-  const recentCount = boardIssues.filter((i) => i.createdAt && new Date(i.createdAt).getTime() >= sevenDaysAgo).length;
-  const doneCount = boardIssues.filter((i) => doneStageIds.has(i.stageId)).length;
+  const recentCount = boardIssues.filter((i) => isRecentIssue(i)).length;
+  const doneCount = boardIssues.filter((i) => isCompletedIssue(i, boards)).length;
 
   return (
     <div className="p-8 bg-[#f4f5f7] min-h-full text-left animate-in fade-in duration-500">

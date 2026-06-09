@@ -29,6 +29,13 @@ export const isActiveIssue = (issue: Issue, boards: Board[]) => {
   return !!match?.stage.active && !isCompletedIssue(issue, boards);
 };
 
+export const isRecentIssue = (issue: Issue, days = 7) => {
+  if (!issue.createdAt) return false;
+  return new Date(issue.createdAt).getTime() >= Date.now() - days * 24 * 60 * 60 * 1000;
+};
+
+export const buildUserLookup = (users: User[]) => new Map(users.map((item) => [item.id, item]));
+
 export const buildUserDisplayName = (user?: User) => {
   if (!user) return "Nieprzypisane";
   const fullName = [user.firstName, user.lastName].filter(Boolean).join(" ").trim();
