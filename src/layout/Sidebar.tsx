@@ -1,7 +1,9 @@
 import { useState } from "react"
 import { useAuthStore } from "../store/useAuthStore"
 import { useTranslation } from 'react-i18next'
-import { Link, useLocation } from "react-router-dom"
+import { Link, useLocation, useNavigate } from "react-router-dom"
+import { useQuery } from "@tanstack/react-query"
+import { issuesApi } from "../api/issues.api"
 import {
   LayoutDashboard,
   Zap,
@@ -19,11 +21,19 @@ import {
   Layout
 } from "lucide-react"
 
+interface Stage {
+  id: number;
+  name: string;
+  type: string;
+  active: boolean;
+}
+
 interface Board {
   id: number;
   name: string;
   organizationId: number;
   userIds: number[];
+  stages?: Stage[];
 }
 
 interface SidebarProps {
@@ -41,18 +51,45 @@ const navItems = [
   { icon: Settings, key: "nav.settings", path: "/organization/settings" },
 ]
 
-const yourWorkItems = [
-  { icon: ClipboardList, key: "yourWork.assigned", count: 5 },
-  { icon: Clock, key: "yourWork.recent", count: 12 },
-  { icon: CheckCircle2, key: "yourWork.done", count: 24 },
-]
-
 export function Sidebar({ isOpen = false, onClose, onOpenCreateBoard, boards }: SidebarProps) {
   const [yourWorkOpen, setYourWorkOpen] = useState(true)
   const [boardsOpen, setBoardsOpen] = useState(true)
-  const { user } = useAuthStore()
+  const { user, token } = useAuthStore()
   const { t } = useTranslation('common')
   const location = useLocation()
+  const navigate = useNavigate()
+
+  const { data: issues = [] } = useQuery({
+    queryKey: ['issues', 'all', user?.id],
+    queryFn: () => issuesApi.getIssues(token || ""),
+    enabled: !!token && !!user?.id,
+  })
+
+  // Stage ids (across the user's boards) that represent completed work
+  const doneStageIds = new Set(
+    boards.flatMap((b) => (b.stages || []).filter((s) => s.type === 'DONE').map((s) => s.id))
+  )
+
+  const myIssues = issues.filter((i) => i.assigneeId === user?.id)
+  const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000
+
+  const yourWorkItems = [
+    {
+      icon: ClipboardList,
+      key: "yourWork.assigned",
+      count: myIssues.length,
+    },
+    {
+      icon: Clock,
+      key: "yourWork.recent",
+      count: myIssues.filter((i) => i.createdAt && new Date(i.createdAt).getTime() >= sevenDaysAgo).length,
+    },
+    {
+      icon: CheckCircle2,
+      key: "yourWork.done",
+      count: myIssues.filter((i) => doneStageIds.has(i.stageId)).length,
+    },
+  ]
 
   const getInitials = (email: string) => {
     if (!email) return "?"
@@ -161,7 +198,10 @@ export function Sidebar({ isOpen = false, onClose, onOpenCreateBoard, boards }: 
               <ul className="mt-1 space-y-0.5">
                 {yourWorkItems.map((item) => (
                   <li key={item.key}>
-                    <button className="flex w-full justify-between px-3 py-2 rounded-md hover:bg-sidebar-hover/40 text-sidebar-text hover:text-white text-sm transition-colors text-left">
+                    <button
+                      onClick={() => navigate('/backlog')}
+                      className="flex w-full justify-between px-3 py-2 rounded-md hover:bg-sidebar-hover/40 text-sidebar-text hover:text-white text-sm transition-colors text-left"
+                    >
                       <span className="flex items-center gap-3">
                         <item.icon className="h-4 w-4 opacity-70" />
                         {t(item.key)}

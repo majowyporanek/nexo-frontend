@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { boardsApi } from "../../api/boards.api";
+import { issuesApi } from "../../api/issues.api";
 import { useAuthStore } from "../../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -21,6 +22,23 @@ export const Dashboard = () => {
 
     enabled: !!token && !!user?.id
   });
+
+  const { data: issues = [] } = useQuery({
+    queryKey: ['issues', 'all', user?.id],
+    queryFn: () => issuesApi.getIssues(token || ""),
+    enabled: !!token && !!user?.id
+  });
+
+  // Issues within the boards the user belongs to
+  const myBoardIds = new Set((boards || []).map((b: any) => b.id));
+  const doneStageIds = new Set(
+    (boards || []).flatMap((b: any) => (b.stages || []).filter((s: any) => s.type === 'DONE').map((s: any) => s.id))
+  );
+  const boardIssues = issues.filter((i) => myBoardIds.has(i.boardId));
+  const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+
+  const recentCount = boardIssues.filter((i) => i.createdAt && new Date(i.createdAt).getTime() >= sevenDaysAgo).length;
+  const doneCount = boardIssues.filter((i) => doneStageIds.has(i.stageId)).length;
 
   return (
     <div className="p-8 bg-[#f4f5f7] min-h-full text-left animate-in fade-in duration-500">
@@ -87,7 +105,7 @@ export const Dashboard = () => {
             <Clock className="h-6 w-6" />
           </div>
           <div>
-            <p className="text-2xl font-bold text-[#172b4d]">12</p>
+            <p className="text-2xl font-bold text-[#172b4d]">{recentCount}</p>
             <p className="text-[10px] text-gray-400 uppercase font-black tracking-widest">
               {t('dashboard.stats.recent', 'Ostatnie')}
             </p>
@@ -99,7 +117,7 @@ export const Dashboard = () => {
             <CheckCircle className="h-6 w-6" />
           </div>
           <div>
-            <p className="text-2xl font-bold text-[#172b4d]">24</p>
+            <p className="text-2xl font-bold text-[#172b4d]">{doneCount}</p>
             <p className="text-[10px] text-gray-400 uppercase font-black tracking-widest">
               {t('dashboard.stats.done', 'Zrobione')}
             </p>
