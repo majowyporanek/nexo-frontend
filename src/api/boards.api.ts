@@ -101,23 +101,25 @@ export const boardsApi = {
     return response.json();
   },
 
-  removeUserFromBoard: async (token: string, boardId: number, userId: number): Promise<any> => {
-    const response = await fetch(`${API_URL}/boards/${boardId}/users/${userId}`, {
-      method: 'DELETE',
+  updateStage: async (
+    token: string,
+    boardId: number,
+    stageId: number,
+    data: { name?: string; isActive?: boolean }
+  ): Promise<Board> => {
+    const response = await fetch(`${API_URL}/boards/${boardId}/stages/${stageId}`, {
+      method: 'PUT',
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
-      }
+      },
+      body: JSON.stringify(data)
     });
 
     if (!response.ok) {
-      throw new ApiError('Failed to remove user from board', response.status);
+      throw new ApiError('Failed to update stage', response.status);
     }
 
-    const contentType = response.headers.get("content-type");
-    if (contentType && contentType.includes("application/json")) {
-      return response.json();
-    }
-    return response;
+    return response.json();
   }
 };
