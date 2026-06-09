@@ -1,5 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
-// import App from "../App";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import { MainLayout } from "../layout/MainLayout";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 
@@ -12,6 +11,9 @@ import { OrganizationSettings } from "../pages/organization/OrganizationSettings
 import { MembersList } from "../pages/organization/MembersList";
 import { BoardView } from "../pages/projects/BoardView";
 import { Dashboard } from "../pages/projects/Dashboard";
+import { Backlog } from "../pages/projects/Backlog";
+import { ActiveSprints } from "../pages/projects/ActiveSprints";
+import { Reports } from "../pages/projects/Reports";
 
 export const router = createBrowserRouter([
     {
@@ -22,12 +24,32 @@ export const router = createBrowserRouter([
                 element: <MainLayout />,
                 children: [
                     {
+                        index: true,
+                        element: <Navigate to="/dashboard" replace />
+                    },
+                    {
                         path: "dashboard",
                         element: <Dashboard /> 
                     },
                     {
                         path: "boards/:boardId",
                         element: <BoardView />
+                    },
+                    {
+                        path: "active-sprints",
+                        element: <ActiveSprints />
+                    },
+                    {
+                        path: "backlog",
+                        element: <Backlog />
+                    },
+                    {
+                        path: "reports",
+                        element: <Reports />
+                    },
+                    {
+                        path: "settings",
+                        element: <Navigate to="/organization/settings" replace />
                     },
                     {
                         path: "profile",
@@ -66,5 +88,9 @@ export const router = createBrowserRouter([
                 element: <RegisterInvited />
             }
         ]
+    },
+    {
+        path: "/settings",
+        element: <Navigate to="/organization/settings" replace />
     }
 ])
