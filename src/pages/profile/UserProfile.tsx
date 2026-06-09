@@ -45,10 +45,10 @@ export function UserProfile() {
   }, [token, user?.email, updateUserDetails]);
 
   useEffect(() => {
-    if (token && (!user?.firstName || !user?.organizationName)) {
+    if (token) {
       fetchAllData();
     }
-  }, [token, user?.firstName, user?.organizationName, fetchAllData]);
+  }, [token, fetchAllData]);
 
   if (!user) return null;
 

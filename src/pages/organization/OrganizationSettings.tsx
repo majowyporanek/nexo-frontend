@@ -76,7 +76,7 @@ export function OrganizationSettings() {
                 value={orgName}
                 onChange={(e) => setOrgName(e.target.value)}
                 disabled={isLoading || !isAdmin}
-                className="input input-bordered w-full"
+                className="input input-bordered w-full bg-white text-gray-900 border-gray-300 focus:border-brand disabled:bg-gray-100 disabled:text-gray-500"
               />
             </div>
           </div>
