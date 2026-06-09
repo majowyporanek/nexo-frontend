@@ -42,12 +42,16 @@ export const Reports = () => {
     enabled: !!token,
   });
 
+  // Restrict all metrics to issues that belong to the user's own boards
+  const myBoardIds = useMemo(() => new Set(boards.map((board) => board.id)), [boards]);
+  const scopedIssues = useMemo(() => issues.filter((issue) => myBoardIds.has(issue.boardId)), [issues, myBoardIds]);
+
   const metrics = useMemo(() => {
     const priorityCounts = Object.fromEntries(priorityOrder.map((priority) => [priority, 0]));
     const assigneeCounts = new Map<number, number>();
     const boardCounts = new Map<number, number>();
 
-    for (const issue of issues) {
+    for (const issue of scopedIssues) {
       priorityCounts[issue.priority || "MEDIUM"] = (priorityCounts[issue.priority || "MEDIUM"] || 0) + 1;
       boardCounts.set(issue.boardId, (boardCounts.get(issue.boardId) || 0) + 1);
       if (issue.assigneeId) {
@@ -55,9 +59,9 @@ export const Reports = () => {
       }
     }
 
-    const activeIssues = issues.filter((issue) => isActiveIssue(issue, boards));
-    const doneIssues = issues.filter((issue) => isCompletedIssue(issue, boards));
-    const unassignedIssues = issues.filter((issue) => !issue.assigneeId).length;
+    const activeIssues = scopedIssues.filter((issue) => isActiveIssue(issue, boards));
+    const doneIssues = scopedIssues.filter((issue) => isCompletedIssue(issue, boards));
+    const unassignedIssues = scopedIssues.filter((issue) => !issue.assigneeId).length;
 
     return {
       priorityCounts,
@@ -67,7 +71,7 @@ export const Reports = () => {
       doneIssues,
       unassignedIssues,
     };
-  }, [boards, issues]);
+  }, [boards, scopedIssues]);
 
   const topAssignees = useMemo(() => {
     return [...metrics.assigneeCounts.entries()]
@@ -83,7 +87,7 @@ export const Reports = () => {
   }, [boards, metrics.boardCounts]);
 
   const statCards = [
-    { label: t("reports.total", "Wszystkie zadania"), value: issues.length, icon: Layers3 },
+    { label: t("reports.total", "Wszystkie zadania"), value: scopedIssues.length, icon: Layers3 },
     { label: t("reports.active", "Aktywne"), value: metrics.activeIssues.length, icon: BarChart3 },
     { label: t("reports.done", "Zrobione"), value: metrics.doneIssues.length, icon: CheckCircle2 },
     { label: t("reports.unassigned", "Bez przypisania"), value: metrics.unassignedIssues, icon: CircleSlash2 },

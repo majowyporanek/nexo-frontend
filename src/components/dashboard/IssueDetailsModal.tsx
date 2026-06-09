@@ -28,6 +28,7 @@ interface Issue {
   boardId: number;
   reporterId: number;
   organizationId: number;
+  createdAt?: string;
 }
 
 interface Props {
@@ -288,7 +289,9 @@ export const IssueDetailsModal = ({ issue, stages, onClose, onUpdate, onDelete }
                 </div>
                 <div className="text-left">
                   <p className="text-[9px] text-gray-400 font-bold uppercase">{t('board.createdAt', 'Utworzono')}</p>
-                  <p className="text-xs text-gray-700 font-bold">12.05.2026</p>
+                  <p className="text-xs text-gray-700 font-bold">
+                    {localIssue.createdAt ? new Date(localIssue.createdAt).toLocaleDateString() : "—"}
+                  </p>
                 </div>
               </div>
             </div>
