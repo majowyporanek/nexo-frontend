@@ -1,0 +1,26 @@
+name: Frontend CD
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build-and-push:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Get repo code
+        uses: actions/checkout@v4
+
+      - name: Log to azure ACR(container registry)
+        uses: azure/docker-login@v1
+        with:
+          login-server: nexoregistryheczko.azurecr.io
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+      - name: Build docker image
+        run: |
+          docker build -t nexoregistryheczko.azurecr.io/frontend-nexo:latest .
+          docker push nexoregistryheczko.azurecr.io/frontend-nexo:latest

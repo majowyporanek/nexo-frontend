@@ -1,7 +1,7 @@
 // // import { KanbanColumn } from "./KanbanColumn"
 // // import type { Issue } from "./IssueCard"
 // // import { useTranslation } from 'react-i18next'
-
+//
 // // const teamMembers = [
 // //   { name: "John Doe", color: "#5243AA" },
 // //   { name: "Sarah Chen", color: "#0052CC" },
@@ -9,14 +9,14 @@
 // //   { name: "Emily Davis", color: "#FF5630" },
 // //   { name: "Alex Kim", color: "#6554C0" },
 // // ]
-
+//
 // // const columns: { key: string; title: string; status: string; accentColor: string }[] = [
 // //   { key: 'kanban.columns.todo', title: 'To Do', status: 'todo', accentColor: '#6B778C' },
 // //   { key: 'kanban.columns.inProgress', title: 'In Progress', status: 'in-progress', accentColor: '#0052CC' },
 // //   { key: 'kanban.columns.inReview', title: 'In Review', status: 'in-review', accentColor: '#FF991F' },
 // //   { key: 'kanban.columns.done', title: 'Done', status: 'done', accentColor: '#00875A' },
 // // ]
-
+//
 // // const issues: Issue[] = [
 // //   {
 // //     id: "1",
@@ -126,7 +126,7 @@
 // //     assignee: { name: "John Doe", color: "#5243AA" },
 // //   },
 // // ]
-
+//
 // // // Distribute issues across columns
 // // const issuesByStatus: Record<string, Issue[]> = {
 // //   todo: issues.slice(0, 4),
@@ -134,29 +134,29 @@
 // //   "in-review": issues.slice(7, 10),
 // //   done: issues.slice(10, 12),
 // // }
-
+//
 // // export function KanbanBoard() {
 // //   const { t } = useTranslation('common')
 // //   const columnsTranslated = columns.map(c => ({ ...c, title: t(c.key) }))
-
+//
 // //   return (
 // //     <div className="flex flex-1 flex-col h-full bg-board-bg pb-2">
 // //       {/* Breadcrumbs */}
 // //       <div className="mb-4 text-sm font-medium text-gray-500">
 // //         {t('kanban.breadcrumbs')}
 // //       </div>
-
+//
 // //       {/* Board Header */}
 // //       <div className="flex items-center justify-between mb-4">
 // //         <div className="flex items-center gap-4">
 // //             <h1 className="text-2xl font-bold text-gray-900 tracking-tight">{t('kanban.sprintTitle')}</h1>
 // //         </div>
-
+//
 // //         {/* Team Avatars & Actions */}
 // //         <div className="flex items-center gap-4">
 // //           <div className="flex -space-x-2 mr-2">
 // //             {teamMembers.map((member) => (
-// //               <div 
+// //               <div
 // //                 key={member.name}
 // //                 className="w-8 h-8 rounded-full border-2 border-board-bg flex items-center justify-center text-xs font-semibold text-white cursor-pointer hover:z-10"
 // //                 style={{ backgroundColor: member.color }}
@@ -166,13 +166,13 @@
 // //               </div>
 // //             ))}
 // //           </div>
-          
+//
 // //           <button className="btn h-9 min-h-0 bg-gray-100 hover:bg-gray-200 text-gray-700 border-none shadow-sm font-medium">
 // //             {t('actions.completeSprint')}
 // //           </button>
 // //         </div>
 // //       </div>
-
+//
 // //       {/* Board Filters */}
 // //       <div className="flex items-center gap-3 mb-6">
 // //         <div className="relative">
@@ -192,7 +192,7 @@
 // //         <div className="h-6 w-[1px] bg-gray-300 mx-2"></div>
 // //         <button className="text-sm font-medium text-gray-600 hover:text-gray-900">{t('actions.filters.clearAll')}</button>
 // //       </div>
-
+//
 // //       {/* Kanban Columns */}
 // //       <div className="flex flex-1 gap-4 overflow-x-auto pb-4 custom-scrollbar">
 // //         {columnsTranslated.map((column) => (
@@ -207,38 +207,38 @@
 // //     </div>
 // //   )
 // // }
-
+//
 // import { useQuery } from "@tanstack/react-query";
 // import { useTranslation } from 'react-i18next';
 // import { KanbanColumn } from "./KanbanColumn";
 // import { issuesApi } from "../../api/issues.api";
-
+//
 // const columns = [
 //   { key: 'kanban.columns.todo', title: 'To Do', status: 'TODO', accentColor: '#6B778C' },
 //   { key: 'kanban.columns.inProgress', title: 'In Progress', status: 'IN_PROGRESS', accentColor: '#0052CC' },
 //   { key: 'kanban.columns.inReview', title: 'In Review', status: 'IN_REVIEW', accentColor: '#FF991F' },
 //   { key: 'kanban.columns.done', title: 'Done', status: 'DONE', accentColor: '#00875A' },
 // ];
-
+//
 // export function KanbanBoard() {
 //   const { t } = useTranslation('common');
-
+//
 //   const { data: serverIssues, isLoading, error } = useQuery({
 //     queryKey: ['issues'],
 //     queryFn: issuesApi.getAllIssues
 //   });
-
+//
 //   const issuesByStatus: Record<string, any[]> = {
 //     TODO: serverIssues?.filter((i: any) => i.status === 'TODO') || [],
 //     IN_PROGRESS: serverIssues?.filter((i: any) => i.status === 'IN_PROGRESS') || [],
 //     IN_REVIEW: serverIssues?.filter((i: any) => i.status === 'IN_REVIEW') || [],
 //     DONE: serverIssues?.filter((i: any) => i.status === 'DONE') || [],
 //   };
-
+//
 //   if (isLoading) {
 //     return <div className="flex h-full items-center justify-center">Ładowanie zadań z serwera...</div>;
 //   }
-
+//
 //   if (error) {
 //     return (
 //       <div className="p-4 text-red-600 bg-red-50 rounded-md">
@@ -246,19 +246,19 @@
 //       </div>
 //     );
 //   }
-
+//
 //   return (
 //     <div className="flex flex-1 flex-col h-full bg-board-bg pb-2">
 //       <div className="mb-4 text-sm font-medium text-gray-500">
 //         {t('kanban.breadcrumbs')}
 //       </div>
-
+//
 //       <div className="flex items-center justify-between mb-4">
 //         <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
 //           {t('kanban.sprintTitle')}
 //         </h1>
 //       </div>
-
+//
 //       <div className="flex flex-1 gap-4 overflow-x-auto pb-4 custom-scrollbar">
 //         {columns.map((column) => (
 //           <KanbanColumn

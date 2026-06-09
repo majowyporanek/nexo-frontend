@@ -1,4 +1,4 @@
-import { Search, Plus, Bell, Menu, LogOut, User, Users } from "lucide-react"
+import { Search, Plus, Menu, LogOut, User, Users } from "lucide-react"
 import { useAuthStore } from "../store/useAuthStore"
 import { useTranslation } from "react-i18next"
 import { Link, useNavigate } from "react-router-dom"
