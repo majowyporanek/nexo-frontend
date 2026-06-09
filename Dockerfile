@@ -15,11 +15,17 @@ RUN npm run build
 # STAGE 2 - nginx serve
 FROM nginx:alpine
 
-WORKDIR /app_front
+# Run nginx as the non-root "nginx" user while still serving on port 80:
+# grant the binary the capability to bind privileged ports and make the
+# runtime paths writable by that user.
+RUN apk add --no-cache libcap && \
+    setcap 'cap_net_bind_service=+ep' /usr/sbin/nginx && \
+    chown -R nginx:nginx /var/cache/nginx && \
+    touch /var/run/nginx.pid && chown nginx:nginx /var/run/nginx.pid
 
-RUN rm -rf /usr/share/nginx/html/*
+COPY --from=builder --chown=nginx:nginx /app/dist /usr/share/nginx/html
 
-COPY --from=builder /app/dist /usr/share/nginx/html
+USER nginx
 
 EXPOSE 80
 

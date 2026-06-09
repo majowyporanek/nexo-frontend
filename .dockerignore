@@ -1,5 +1,33 @@
+# dependencies & build output
 node_modules
-.git
-.idea
 dist
+build
+coverage
+
+# version control & CI
+.git
+.gitignore
+.github
+
+# editor / OS
+.idea
+.vscode
+.DS_Store
+
+# docker
+Dockerfile
+.dockerignore
+
+# secrets & local env
 .env
+.env.*
+*.local
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# docs
+README.md

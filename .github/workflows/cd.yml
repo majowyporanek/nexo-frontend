@@ -12,10 +12,10 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Get repo code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Log to azure ACR(container registry)
-        uses: azure/docker-login@v1
+        uses: azure/docker-login@83efeb77770c98b620c73055fbb59b2847e17dc0 # v1
         with:
           login-server: nexoregistryheczko.azurecr.io
           username: ${{ secrets.ACR_USERNAME }}
