@@ -6,8 +6,11 @@ WORKDIR /app
 COPY ./package*.json ./
 RUN npm install
 
-# build source files
-COPY . .
+# build source files (copy only what the build needs instead of the whole context)
+COPY ./index.html ./vite.config.ts ./tailwind.config.js ./
+COPY ./tsconfig.json ./tsconfig.app.json ./tsconfig.node.json ./
+COPY ./src ./src
+COPY ./public ./public
 ARG VITE_API_URL
 ENV VITE_API_URL=$VITE_API_URL
 RUN npm run build
