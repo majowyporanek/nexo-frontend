@@ -5,7 +5,7 @@ import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { useAuthStore } from "../../store/useAuthStore";
 import { boardsApi } from "../../api/boards.api";
 import { issuesApi } from "../../api/issues.api";
-import { Plus, Loader2, MoreHorizontal, User, UserPlus, Users, Check, X } from "lucide-react";
+import { Plus, Loader2, MoreHorizontal, User, UserPlus, Users, Check } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { CreateIssueModal } from "../../components/boards/CreateIssueModal";
 import { IssueDetailsModal } from "../../components/dashboard/IssueDetailsModal";
@@ -93,13 +93,15 @@ export const BoardView = () => {
     }
   };
 
-  const handleRemoveUserFromBoard = async (userId: number) => {
+  const handleRenameStage = async (stageId: number, currentName: string) => {
+    const newName = window.prompt(t('board.renameStagePrompt', 'Nowa nazwa kolumny:'), currentName);
+    if (!newName || !newName.trim() || newName.trim() === currentName) return;
+
     try {
-      await boardsApi.removeUserFromBoard(token!, numericBoardId, userId);
+      await boardsApi.updateStage(token!, numericBoardId, stageId, { name: newName.trim() });
       queryClient.invalidateQueries({ queryKey: ['board', boardId] });
-      alert(t('board.notifications.userRemoved', 'Dostęp do tablicy został odebrany.'));
     } catch (error) {
-      alert(t('board.errors.removeMemberFailed', 'Błąd podczas usuwania użytkownika z tablicy.'));
+      alert(t('board.errors.updateStageFailed', 'Błąd podczas aktualizacji kolumny.'));
     }
   };
 
@@ -153,14 +155,7 @@ export const BoardView = () => {
                           </div>
                           <div className="flex items-center gap-1">
                             {isOnBoard ? (
-                              <>
-                                <Check className="h-4 w-4 text-green-500 mr-1" />
-                                {isAdmin && (
-                                  <button onClick={() => handleRemoveUserFromBoard(member.id)} className="btn btn-ghost btn-xs text-red-400 hover:text-red-600 p-0 h-6 w-6">
-                                    <X className="h-3.5 w-3.5" />
-                                  </button>
-                                )}
-                              </>
+                              <Check className="h-4 w-4 text-green-500 mr-1" />
                             ) : (
                               isAdmin && (
                                 <button onClick={() => handleAddUserToBoard(member.id)} className="btn btn-ghost btn-xs text-brand hover:bg-brand hover:text-white h-6 w-6">
@@ -205,7 +200,15 @@ export const BoardView = () => {
                       {stageIssues.length}
                     </span>
                   </div>
-                  <MoreHorizontal className="h-4 w-4 text-[#42526e] cursor-pointer hover:text-black" />
+                  {isAdmin && (
+                    <button
+                      onClick={() => handleRenameStage(stage.id, stage.name)}
+                      title={t('board.renameStage', 'Zmień nazwę kolumny') as string}
+                      className="text-[#42526e] cursor-pointer hover:text-black"
+                    >
+                      <MoreHorizontal className="h-4 w-4" />
+                    </button>
+                  )}
                 </div>
 
                 <Droppable droppableId={stage.id.toString()}>
@@ -280,11 +283,12 @@ export const BoardView = () => {
       )}
 
       {selectedIssue && (
-        <IssueDetailsModal 
+        <IssueDetailsModal
           issue={selectedIssue}
           stages={activeStages}
           onClose={() => setSelectedIssue(null)}
           onUpdate={() => { refreshIssues(); }}
+          onDelete={() => { refreshIssues(); setSelectedIssue(null); }}
         />
       )}
     </div>

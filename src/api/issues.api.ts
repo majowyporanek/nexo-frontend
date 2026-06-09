@@ -86,7 +86,21 @@ export const issuesApi = {
       console.error("Szczegóły błędu serwera:", errorMsg);
       throw new Error('Błąd podczas tworzenia zadania');
     }
-    
+
     return response.json();
+  },
+
+  deleteIssue: async (token: string, issueId: number): Promise<void> => {
+    const response = await fetch(`${API_URL}/issues/${issueId}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error('Błąd podczas usuwania zadania');
+    }
   }
 };

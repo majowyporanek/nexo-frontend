@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useAuthStore } from "../../store/useAuthStore";
-import { X, AlignLeft, Loader2, Clock, ChevronDown } from "lucide-react";
+import { issuesApi } from "../../api/issues.api";
+import { X, AlignLeft, Loader2, Clock, ChevronDown, Trash2 } from "lucide-react";
 
 interface Member {
   id: number;
@@ -27,6 +28,7 @@ interface Issue {
   boardId: number;
   reporterId: number;
   organizationId: number;
+  createdAt?: string;
 }
 
 interface Props {
@@ -34,17 +36,19 @@ interface Props {
   stages: Stage[];
   onClose: () => void;
   onUpdate: () => void;
+  onDelete?: () => void;
 }
 
-export const IssueDetailsModal = ({ issue, stages, onClose, onUpdate }: Props) => {
+export const IssueDetailsModal = ({ issue, stages, onClose, onUpdate, onDelete }: Props) => {
   const { t } = useTranslation('common');
   const { token, user: currentUser } = useAuthStore();
-  
+
   const [localIssue, setLocalIssue] = useState<Issue>(issue);
   const [description, setDescription] = useState(issue.description || "");
-  const [isEditing, setIsEditing] = useState(false); 
+  const [isEditing, setIsEditing] = useState(false);
   const [members, setMembers] = useState<Member[]>([]);
   const [isSaving, setIsSaving] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const isAdmin = currentUser?.role === 'ADMIN';
   const priorities = ["LOWEST", "LOW", "MEDIUM", "HIGH", "HIGHEST"];
@@ -123,6 +127,24 @@ export const IssueDetailsModal = ({ issue, stages, onClose, onUpdate }: Props) =
     setIsEditing(false);
   };
 
+  const handleDelete = async () => {
+    if (!token) return;
+    const confirmed = window.confirm(
+      t('board.deleteIssueConfirm', 'Czy na pewno chcesz usunąć to zadanie?')
+    );
+    if (!confirmed) return;
+
+    setIsDeleting(true);
+    try {
+      await issuesApi.deleteIssue(token, issue.id);
+      onDelete?.();
+      onClose();
+    } catch (err) {
+      alert(t('board.errors.deleteIssueFailed', 'Nie udało się usunąć zadania.'));
+      setIsDeleting(false);
+    }
+  };
+
   return (
     <div className="modal modal-open">
       <div className="modal-box max-w-4xl min-h-[500px] p-0 overflow-hidden flex flex-col bg-white border border-gray-200 shadow-2xl">
@@ -131,9 +153,21 @@ export const IssueDetailsModal = ({ issue, stages, onClose, onUpdate }: Props) =
           <div className="flex items-center gap-2 font-bold text-gray-400 text-xs text-left">
             ID-{localIssue.id} {isSaving && <Loader2 className="h-3 w-3 animate-spin text-brand" />}
           </div>
-          <button onClick={onClose} className="btn btn-ghost btn-sm btn-circle text-gray-400">
-            <X className="h-5 w-5" />
-          </button>
+          <div className="flex items-center gap-1">
+            {isAdmin && (
+              <button
+                onClick={handleDelete}
+                disabled={isDeleting}
+                className="btn btn-ghost btn-sm btn-circle text-gray-400 hover:text-red-600"
+                title={t('board.deleteIssue', 'Usuń zadanie') as string}
+              >
+                {isDeleting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-5 w-5" />}
+              </button>
+            )}
+            <button onClick={onClose} className="btn btn-ghost btn-sm btn-circle text-gray-400">
+              <X className="h-5 w-5" />
+            </button>
+          </div>
         </div>
 
         <div className="flex flex-1 flex-col md:flex-row overflow-hidden bg-white text-left">
@@ -255,7 +289,9 @@ export const IssueDetailsModal = ({ issue, stages, onClose, onUpdate }: Props) =
                 </div>
                 <div className="text-left">
                   <p className="text-[9px] text-gray-400 font-bold uppercase">{t('board.createdAt', 'Utworzono')}</p>
-                  <p className="text-xs text-gray-700 font-bold">12.05.2026</p>
+                  <p className="text-xs text-gray-700 font-bold">
+                    {localIssue.createdAt ? new Date(localIssue.createdAt).toLocaleDateString() : "—"}
+                  </p>
                 </div>
               </div>
             </div>

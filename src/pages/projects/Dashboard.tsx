@@ -1,26 +1,24 @@
-import { useQuery } from "@tanstack/react-query";
-import { boardsApi } from "../../api/boards.api";
 import { useAuthStore } from "../../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Layout, CheckCircle, Clock } from "lucide-react";
+import { useMyBoards, useOrgIssues } from "../../lib/workspace-hooks";
+import { isCompletedIssue, isRecentIssue } from "../../lib/workspace-data";
 
 export const Dashboard = () => {
-  const { token, user } = useAuthStore();
+  const { user } = useAuthStore();
   const { t } = useTranslation('common');
   const navigate = useNavigate();
 
-  const { data: boards, isLoading } = useQuery({
-    queryKey: ['boards', user?.id], 
-    queryFn: async () => {
-      if (!token || !user?.id) return [];
-      
-      const allBoards = await boardsApi.getBoards(token);
-      return allBoards.filter((board: any) => board.userIds.includes(user.id));
-    },
+  const { data: boards = [], isLoading } = useMyBoards();
+  const { data: issues = [] } = useOrgIssues();
 
-    enabled: !!token && !!user?.id
-  });
+  // Issues within the boards the user belongs to
+  const myBoardIds = new Set(boards.map((b) => b.id));
+  const boardIssues = issues.filter((i) => myBoardIds.has(i.boardId));
+
+  const recentCount = boardIssues.filter((i) => isRecentIssue(i)).length;
+  const doneCount = boardIssues.filter((i) => isCompletedIssue(i, boards)).length;
 
   return (
     <div className="p-8 bg-[#f4f5f7] min-h-full text-left animate-in fade-in duration-500">
@@ -87,7 +85,7 @@ export const Dashboard = () => {
             <Clock className="h-6 w-6" />
           </div>
           <div>
-            <p className="text-2xl font-bold text-[#172b4d]">12</p>
+            <p className="text-2xl font-bold text-[#172b4d]">{recentCount}</p>
             <p className="text-[10px] text-gray-400 uppercase font-black tracking-widest">
               {t('dashboard.stats.recent', 'Ostatnie')}
             </p>
@@ -99,7 +97,7 @@ export const Dashboard = () => {
             <CheckCircle className="h-6 w-6" />
           </div>
           <div>
-            <p className="text-2xl font-bold text-[#172b4d]">24</p>
+            <p className="text-2xl font-bold text-[#172b4d]">{doneCount}</p>
             <p className="text-[10px] text-gray-400 uppercase font-black tracking-widest">
               {t('dashboard.stats.done', 'Zrobione')}
             </p>

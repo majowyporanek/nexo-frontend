@@ -1,46 +1,17 @@
 import { useMemo } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { Zap, LayoutGrid } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { useAuthStore } from "../../store/useAuthStore";
-import { boardsApi } from "../../api/boards.api";
-import { issuesApi } from "../../api/issues.api";
-import { usersApi } from "../../api/users.api";
-import { buildUserDisplayName, getBoardById, getStageById, isActiveIssue, isCompletedIssue } from "../../lib/workspace-data";
+import { useMyBoards, useOrgIssues, useOrgUsers } from "../../lib/workspace-hooks";
+import { buildUserDisplayName, buildUserLookup, getBoardById, getStageById, isActiveIssue, isCompletedIssue } from "../../lib/workspace-data";
 
 export const ActiveSprints = () => {
-  const { token, user } = useAuthStore();
   const { t } = useTranslation("common");
 
-  const { data: boards = [], isLoading: boardsLoading } = useQuery({
-    queryKey: ["boards", user?.id, "active-sprints"],
-    queryFn: async () => {
-      if (!token) return [];
-      const allBoards = await boardsApi.getBoards(token);
-      return user?.id ? allBoards.filter((board) => board.userIds.includes(user.id)) : allBoards;
-    },
-    enabled: !!token,
-  });
+  const { data: boards = [], isLoading: boardsLoading } = useMyBoards();
+  const { data: issues = [], isLoading: issuesLoading } = useOrgIssues();
+  const { data: users = [] } = useOrgUsers();
 
-  const { data: issues = [], isLoading: issuesLoading } = useQuery({
-    queryKey: ["issues", user?.organizationId, "active-sprints"],
-    queryFn: async () => {
-      if (!token) return [];
-      return issuesApi.getIssues(token);
-    },
-    enabled: !!token,
-  });
-
-  const { data: users = [] } = useQuery({
-    queryKey: ["users", user?.organizationId, "active-sprints"],
-    queryFn: async () => {
-      if (!token) return [];
-      return usersApi.getUsers(token);
-    },
-    enabled: !!token,
-  });
-
-  const assigneeLookup = useMemo(() => new Map(users.map((item) => [item.id, item])), [users]);
+  const assigneeLookup = useMemo(() => buildUserLookup(users), [users]);
 
   const sprintBoards = useMemo(() => {
     return boards
