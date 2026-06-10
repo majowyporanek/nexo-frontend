@@ -13,12 +13,15 @@ export function Header({ onMenuClick, onCreateClick }: HeaderProps) {
   const { t, i18n } = useTranslation('common');
   const navigate = useNavigate();
 
-  const getInitials = (email: string) => {
-    const parts = email.split('@')[0].split('.')
+  const getInitials = (user: any) => {
+    if (user?.firstName && user?.lastName) {
+      return (user.firstName[0] + user.lastName[0]).toUpperCase()
+    }
+    const parts = user?.email?.split('@')[0].split('.') || []
     if (parts.length > 1) {
       return (parts[0][0] + parts[1][0]).toUpperCase()
     }
-    return email.substring(0, 2).toUpperCase()
+    return user?.email?.substring(0, 2).toUpperCase() || '?'
   }
 
   const changeLang = (lng: string) => {
@@ -78,7 +81,7 @@ export function Header({ onMenuClick, onCreateClick }: HeaderProps) {
                 <span className="text-[10px] text-gray-500 font-bold uppercase">{user.role}</span>
               </div>
               <div className="avatar placeholder shadow-sm rounded-full bg-[#0052CC] text-white w-9 h-9 flex items-center justify-center">
-                <span className="text-sm font-semibold">{getInitials(user.email)}</span>
+                <span className="text-sm font-semibold">{getInitials(user)}</span>
               </div>
             </div>
 

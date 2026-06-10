@@ -159,7 +159,11 @@
     "create": "Utwórz",
     "error": "Błąd",
     "update": "Aktualizuj",
-    "add": "Dodaj"
+    "add": "Dodaj",
+    "edit": "Edytuj",
+    "save": "Zapisz",
+    "saving": "Zapisywanie...",
+    "readOnly": "Pole tylko do odczytu"
   },
   "board": {
     "projects": "Projekty",

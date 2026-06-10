@@ -26,7 +26,8 @@ interface AuthState {
   login: (token: string) => Promise<void>;
   logout: () => void;
   checkAuth: () => Promise<void>;
-  updateUserDetails: (details: Partial<User>) => void; 
+  updateUserDetails: (details: Partial<User>) => void;
+  saveProfile: (details: { firstName: string; lastName: string }) => Promise<void>;
 }
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -102,6 +103,37 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     set((state) => ({
       user: state.user ? { ...state.user, ...details } : null
     }));
+  },
+
+  saveProfile: async (details: { firstName: string; lastName: string }) => {
+    const { token, user } = get();
+    if (!token || !user) throw new Error('No token or user available');
+
+    try {
+      const response = await fetch(`${API_URL}/users/${user.id}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          firstName: details.firstName,
+          lastName: details.lastName
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Błąd aktualizacji profilu');
+      }
+
+      const updatedUser = await response.json();
+      set((state) => ({
+        user: state.user ? { ...state.user, ...updatedUser } : null
+      }));
+    } catch (error) {
+      console.error('Save profile error:', error);
+      throw error;
+    }
   },
 
   logout: () => {
