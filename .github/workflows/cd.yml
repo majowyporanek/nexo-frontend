@@ -24,3 +24,28 @@ jobs:
         run: |
           docker build -t nexoregistryheczko.azurecr.io/frontend-nexo:latest .
           docker push nexoregistryheczko.azurecr.io/frontend-nexo:latest
+#  deploy-on-vm:
+#    needs:
+#      - build-and-push
+#    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+#    runs-on: ubuntu-22.04
+#    steps:
+#      - name: Connect to VM via SSH
+#        uses: appleboy/ssh-action@v1
+#        with:
+#          host: ${{ secrets.VM_HOST }}
+#          username: ${{ secrets.VM_USERNAME }}
+#          key: ${{ secrets.VM_SSH_KEY }}
+#          script: |
+#            cd ~/nexo-deployment
+#
+#            # Log in to ACR
+#            echo "${{ secrets.ACR_PASSWORD  }}" | docker login nexoregistryheczko.azurecr.io -u ${{ secrets.ACR_USERNAME }} --password-stdin
+#
+#            # Pull and deploy new changes
+#            docker pull nexoregistryheczko.azurecr.io/frontend-nexo:latest
+#            docker compose up -d --no-deps backend
+#
+#            # clear everything
+#            docker image prune -f
+#            docker logout nexoregistryheczko.azurecr.io
