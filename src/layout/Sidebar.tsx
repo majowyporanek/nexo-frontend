@@ -55,7 +55,11 @@ export function Sidebar({ isOpen = false, onClose, onOpenCreateBoard, boards }: 
     { icon: CheckCircle2, key: "yourWork.done", count: myIssues.filter((i) => isCompletedIssue(i, boards)).length },
   ]
 
-  const getInitials = (email: string) => {
+  const getInitials = (user: any) => {
+    if (user?.firstName && user?.lastName) {
+      return (user.firstName[0] + user.lastName[0]).toUpperCase()
+    }
+    const email = user?.email || ""
     if (!email) return "?"
     const parts = email.split('@')[0].split('.')
     if (parts.length > 1) {
@@ -188,7 +192,7 @@ export function Sidebar({ isOpen = false, onClose, onOpenCreateBoard, boards }: 
           >
             <div className="avatar placeholder">
               <div className="bg-[#0052CC] text-white rounded-full w-9 h-9 flex items-center justify-center shadow-md ring-2 ring-transparent group-hover:ring-white/20">
-                <span className="text-xs font-bold">{getInitials(user?.email || "")}</span>
+                <span className="text-xs font-bold">{getInitials(user)}</span>
               </div>
             </div>
             <div className="flex-1 min-w-0">

@@ -1,11 +1,64 @@
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useAuthStore } from "../../store/useAuthStore";
-import { Mail, LogOut, User as UserIcon, Building2, Loader2 } from "lucide-react";
+import type { User as ApiUser } from "../../api/users.api";
+import { Mail, LogOut, User as UserIcon, Building2, Loader2, Edit, Save, X } from "lucide-react";
 
 export function UserProfile() {
   const { t } = useTranslation('common');
-  const { user, token, logout, updateUserDetails } = useAuthStore();
+  const { user, token, logout, updateUserDetails, saveProfile } = useAuthStore();
+  const [isEditing, setIsEditing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [formData, setFormData] = useState<{ firstName: string; lastName: string }>({
+    firstName: user?.firstName || "",
+    lastName: user?.lastName || ""
+  });
+
+  // Update form when user data changes
+  useEffect(() => {
+    if (user) {
+      setFormData({
+        firstName: user.firstName || "",
+        lastName: user.lastName || ""
+      });
+    }
+  }, [user?.id]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+    setError(null);
+  };
+
+  const handleSave = async () => {
+    setIsSaving(true);
+    setError(null);
+    
+    try {
+      await saveProfile(formData);
+      setIsEditing(false);
+    } catch (err) {
+      const e = err as Error;
+      setError(e.message || "Błąd podczas zapisywania profilu");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleCancel = () => {
+    setIsEditing(false);
+    setError(null);
+    if (user) {
+      setFormData({
+        firstName: user.firstName || "",
+        lastName: user.lastName || ""
+      });
+    }
+  };
 
   const fetchAllData = useCallback(async () => {
     if (!token) return;
@@ -16,17 +69,24 @@ export function UserProfile() {
         fetch(`${import.meta.env.VITE_API_URL}/organizations/my`, { headers: { 'Authorization': `Bearer ${token}` } })
       ]);
 
-      let updatedData: any = {};
+      interface LocalUpdate {
+        firstName?: string;
+        lastName?: string;
+        username?: string;
+        organizationName?: string;
+      }
+
+      let updatedData: LocalUpdate = {};
 
       if (usersRes.ok) {
-        const allUsers = await usersRes.json();
-        const me = allUsers.find((u: any) => u.email === user?.email);
+        const allUsers: ApiUser[] = await usersRes.json();
+        const me = allUsers.find((u) => u.email === user?.email);
         if (me) {
-          updatedData = { 
-            ...updatedData, 
-            firstName: me.firstName, 
-            lastName: me.lastName, 
-            username: `${me.firstName} ${me.lastName}` 
+          updatedData = {
+            ...updatedData,
+            firstName: me.firstName,
+            lastName: me.lastName,
+            username: `${me.firstName} ${me.lastName}`
           };
         }
       }
@@ -89,19 +149,54 @@ export function UserProfile() {
             </div>
             
             <div className="p-6 space-y-6">
+              {error && (
+                <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-100 rounded-md">
+                  {error}
+                </div>
+              )}
+
               <div className="flex items-start gap-4">
                 <div className="p-2 bg-green-50 rounded-lg text-green-600">
                   <UserIcon className="h-5 w-5" />
                 </div>
-                <div className="flex-1 grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">{t('profile.firstName')}</label>
-                    <p className="text-gray-900 font-medium">{user.firstName || "---"}</p>
-                  </div>
-                  <div>
-                    <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">{t('profile.lastName')}</label>
-                    <p className="text-gray-900 font-medium">{user.lastName || "---"}</p>
-                  </div>
+                <div className="flex-1">
+                  {isEditing ? (
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">{t('profile.firstName')}</label>
+                        <input
+                          type="text"
+                          name="firstName"
+                          value={formData.firstName}
+                          onChange={handleChange}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent"
+                          placeholder={t('profile.firstName')}
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">{t('profile.lastName')}</label>
+                        <input
+                          type="text"
+                          name="lastName"
+                          value={formData.lastName}
+                          onChange={handleChange}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent"
+                          placeholder={t('profile.lastName')}
+                        />
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">{t('profile.firstName')}</label>
+                        <p className="text-gray-900 font-medium">{user.firstName || "---"}</p>
+                      </div>
+                      <div>
+                        <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">{t('profile.lastName')}</label>
+                        <p className="text-gray-900 font-medium">{user.lastName || "---"}</p>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -126,7 +221,49 @@ export function UserProfile() {
                 <div className="flex-1">
                   <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">{t('profile.email')}</label>
                   <p className="text-gray-900 font-medium">{user.email}</p>
+                  <p className="text-xs text-gray-400 mt-1">{t('common.readOnly', 'Pole tylko do odczytu')}</p>
                 </div>
+              </div>
+
+              {/* Edit/Save/Cancel Buttons */}
+              <div className="flex gap-2 pt-4 border-t border-gray-100">
+                {!isEditing ? (
+                  <button
+                    onClick={() => setIsEditing(true)}
+                    className="btn btn-sm btn-primary gap-2"
+                  >
+                    <Edit className="h-4 w-4" />
+                    {t('common.edit', 'Edytuj')}
+                  </button>
+                ) : (
+                  <>
+                    <button
+                      onClick={handleSave}
+                      disabled={isSaving}
+                      className="btn btn-sm btn-success gap-2"
+                    >
+                      {isSaving ? (
+                        <>
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                          {t('common.saving', 'Zapisywanie...')}
+                        </>
+                      ) : (
+                        <>
+                          <Save className="h-4 w-4" />
+                          {t('common.save', 'Zapisz')}
+                        </>
+                      )}
+                    </button>
+                    <button
+                      onClick={handleCancel}
+                      disabled={isSaving}
+                      className="btn btn-sm btn-outline gap-2"
+                    >
+                      <X className="h-4 w-4" />
+                      {t('common.cancel', 'Anuluj')}
+                    </button>
+                  </>
+                )}
               </div>
             </div>
           </div>

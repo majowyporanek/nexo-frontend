@@ -159,7 +159,11 @@
     "create": "Create",
     "error": "Error",
     "update": "Update",
-    "add": "Add"
+    "add": "Add",
+    "edit": "Edit",
+    "save": "Save",
+    "saving": "Saving...",
+    "readOnly": "Read-only field"
   },
   "board": {
     "projects": "Projects",
